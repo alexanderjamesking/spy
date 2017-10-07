@@ -48,6 +48,7 @@
 
       (is (false? (s/called-no-more-than-once? f)))
       (is (false? (s/called-no-more-than-twice? f)))
+      (is (s/called-no-more-than-thrice? f))
 
       (doall (repeatedly 42 f))
 
@@ -94,3 +95,27 @@
       (f "foo bar")
       (is (false? (s/called-with-exactly? f "foo bar")))
       (is (false? (s/called-with-exactly? f "hello" "world" "!"))))))
+
+(deftest nth-call
+  (testing "nth call"
+    (let [f (s/spy keyword)]
+      (f "bingo")
+      (is (= ["bingo"] (s/nth-call 0 f)))
+      (is (= ["bingo"] (s/first-call f)))
+
+      (f "foo")
+      (f "bar")
+
+      (is (= ["foo"] (s/second-call f)))
+      (is (= ["bar"] (s/third-call f)))))
+
+  (testing "error cases"
+    (testing "returns nil when there are no calls"
+      (is (nil? (s/nth-call 5 (s/spy str)))))
+    (testing "returns nil when the function passed is not a spy"
+      (is (nil? (s/nth-call 5 str))))))
+
+(deftest function-with-no-args
+  (let [f (s/spy (fn [] "I have no arguments"))]
+    (f)
+    (is (s/called-once? f))))

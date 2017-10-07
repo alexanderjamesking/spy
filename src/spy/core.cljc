@@ -16,7 +16,7 @@
   (spy (constantly value)))
 
 (defn calls [f]
-  (-> f meta :calls deref))
+  (some-> f meta :calls deref))
 
 (defn call-count [f]
   (count (calls f)))
@@ -56,11 +56,14 @@
 (def called-no-more-than-thrice? (partial called-at-most-n? 3))
 (defn called-no-more-than-n? [n f] (called-at-most-n? n f))
 
-;; first-call
-;; second-call
-;; third-call
-;; last-call
-;; nth-call
+(defn nth-call [n f]
+  (let [f-calls (calls f)]
+    (when (< n (count f-calls))
+      (nth f-calls n))))
+
+(def first-call (partial nth-call 0))
+(def second-call (partial nth-call 1))
+(def third-call (partial nth-call 2))
 
 ;; called with types / called with matching...
 
