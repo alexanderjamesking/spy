@@ -1,28 +1,69 @@
 (ns spy.core-test
   (:require [clojure.test :refer [deftest testing is]]
-            [spy.core :refer [stub spy not-called? called-once? called-n?]]))
+            [spy.core :as s]))
 
 (deftest stub-call-counts
   (testing "call counts"
-    (let [stubbed-fn (stub 42)]
-      (is (not-called? stubbed-fn))
-      (stubbed-fn)
-      (is (called-once? stubbed-fn))
-      (stubbed-fn)
-      (stubbed-fn)
-      (is (called-n? stubbed-fn 3)))))
+    (let [f (s/stub 42)]
+      (is (s/not-called? f))
+      (f)
+      (is (s/called? f))
+      (is (s/called-once? f))
+      (f)
+      (is (s/called? f))
+      (is (s/called-twice? f))
+      (f)
+      (is (s/called-thrice? f))
+      (is (s/called-n? f 3)))))
+
+(deftest called-at-least
+  (testing "called at least once"
+    (let [f (s/stub 42)]
+      (is (false? (s/called-at-least? f 1)))
+      (f)
+      (is (s/called-at-least? f 1))
+      (is (s/called-at-least-once? f))
+
+      (f)
+      (is (s/called-at-least-twice? f))
+
+      (f)
+      (is (s/called-at-least-thrice? f))
+
+      (doall (repeatedly 42 f))
+
+      (is  (s/called-at-least? f 42)))))
 
 (deftest spy-call-counts
   (testing "call counts"
-    (let [my-adder (fn [x y] (+ x y))
-          my-adder-spy (spy my-adder)]
-      (is (not-called? my-adder-spy))
-      (is (= 3 (my-adder-spy 1 2)))
-      (is (called-once? my-adder-spy))))
+    (let [f (s/spy (fn [x y] (+ x y)))]
+      (is (s/not-called? f))
+      (is (= 3 (f 1 2)))
+      (is (s/called-once? f))))
 
   (testing "call counts when the spy is wrapped with partial"
-    (let [my-adder-spy (spy (fn [x y] (+ x y)))
-          my-partial (partial my-adder-spy 5)]
-      (is (not-called? my-adder-spy))
-      (is (= 8 (my-partial 3)))
-      (is (called-once? my-adder-spy)))))
+    (let [spy (s/spy (fn [x y] (+ x y)))
+          pf (partial spy 5)]
+      (is (s/not-called? spy))
+      (is (= 8 (pf 3)))
+      (is (s/called-once? spy)))))
+
+(deftest called-with-test
+  (testing "called with"
+    (let [f (s/spy +)]
+      (f 1 2)
+      (is (s/called-with? f 1 2))
+      (f 1 2 3)
+      (is (s/called-with? f 1 2 3))
+      (is (s/not-called-with? f 7 8)))))
+
+(deftest called-with-exactly
+  (let [f (s/spy str)]
+    (testing "called with exactly"
+      (f "hello world!")
+      (is (s/called-with-exactly? f "hello world!")))
+
+    (testing "returns false if there were other calls"
+      (f "foo bar")
+      (is (false? (s/called-with-exactly? f "foo bar")))
+      (is (false? (s/called-with-exactly? f "hello" "world" "!"))))))
