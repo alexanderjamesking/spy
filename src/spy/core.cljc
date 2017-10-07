@@ -1,16 +1,8 @@
 (ns spy.core)
 
-
-;; TODO - set this up as cljc and run tests in clj and cljs
-;; call counts
+;; TODO
 ;; called with
-
-;; responds with... just an if statment...
-;; responds on 1st call, responds on 2nd call...
-
 ;; reset
-
-;; never called
 
 (defn spy [f]
   (let [calls (atom [])]
