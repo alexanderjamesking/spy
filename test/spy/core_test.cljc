@@ -14,14 +14,14 @@
       (is (s/called-twice? f))
       (f)
       (is (s/called-thrice? f))
-      (is (s/called-n? f 3)))))
+      (is (s/called-n? 3 f)))))
 
 (deftest called-at-least
   (testing "called at least once"
     (let [f (s/stub 42)]
-      (is (false? (s/called-at-least? f 1)))
+      (is (false? (s/called-at-least? 1 f)))
       (f)
-      (is (s/called-at-least? f 1))
+      (is (s/called-at-least? 1 f))
       (is (s/called-at-least-once? f))
 
       (f)
@@ -32,7 +32,15 @@
 
       (doall (repeatedly 42 f))
 
-      (is  (s/called-at-least? f 42)))))
+      (is  (s/called-at-least? 42 f)))))
+
+(deftest reset-spy
+  (testing "resetting the call count for a spy"
+    (let [f (s/stub 1863)]
+      (doall (repeatedly 3 f))
+      (is (s/called-thrice? f))
+      (s/reset-calls! f)
+      (is (s/not-called? f)))))
 
 (deftest spy-call-counts
   (testing "call counts"

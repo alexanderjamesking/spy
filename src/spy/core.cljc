@@ -1,15 +1,16 @@
 (ns spy.core)
 
-;; TODO
-;; called with
-;; reset
+(def no-calls [])
 
 (defn spy [f]
-  (let [calls (atom [])]
+  (let [calls (atom no-calls)]
     (with-meta (fn [& args]
                  (swap! calls conj args)
                  (apply f args))
       {:calls calls})))
+
+(defn reset-calls! [f]
+  (reset! (-> f meta :calls) no-calls))
 
 (defn stub [value]
   (spy (constantly value)))
@@ -20,20 +21,13 @@
 (defn call-count [f]
   (count (calls f)))
 
-(defn called-n? [f n]
+(defn called-n? [n f]
   (= n (call-count f)))
 
-(defn not-called? [f]
-  (called-n? f 0))
-
-(defn called-once? [f]
-  (called-n? f 1))
-
-(defn called-twice? [f]
-  (called-n? f 2))
-
-(defn called-thrice? [f]
-  (called-n? f 3))
+(def not-called? (partial called-n? 0))
+(def called-once? (partial called-n? 1))
+(def called-twice? (partial called-n? 2))
+(def called-thrice? (partial called-n? 3))
 
 (defn called-with? [f & args]
   (some #(= args %) (calls f)))
@@ -43,31 +37,18 @@
 (defn called-with-exactly? [f & args]
   (= [args] (calls f)))
 
-(defn called-at-least-n? [f n]
+(defn called-at-least-n? [n f]
   (>= (call-count f) n))
 
 (defn called-at-least? [f n]
   (called-at-least-n? f n))
 
-(defn called? [f]
-  (called-at-least-n? f 1))
+(def called? (partial called-at-least? 1))
+(def called-at-least-once? (partial called-at-least? 1))
+(def called-at-least-twice? (partial called-at-least? 2))
+(def called-at-least-thrice? (partial called-at-least? 3))
 
-(defn called-at-least-once? [f]
-  (called-at-least-n? f 1))
-
-(defn called-at-least-twice? [f]
-  (called-at-least-n? f 2))
-
-(defn called-at-least-thrice? [f]
-  (called-at-least-n? f 3))
-
-;; never
-;; at least
 ;; at most
-;; once
-;; twice
-;; thrice
-;; exactly
 
 ;; first-call
 ;; second-call
@@ -79,10 +60,7 @@
 ;; called-before (another spy)
 ;; called-after
 
-;; called with
-;; called with exactly
 ;; called with types / called with matching...
-;; not called with match
 
 ;; threw - check if spy threw an exception
 ;; always threw
