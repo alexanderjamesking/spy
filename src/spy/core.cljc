@@ -40,25 +40,27 @@
 (defn called-at-least-n? [n f]
   (>= (call-count f) n))
 
-(defn called-at-least? [f n]
-  (called-at-least-n? f n))
+(defn called-at-least? [n f]
+  (called-at-least-n? n f))
 
 (def called? (partial called-at-least? 1))
 (def called-at-least-once? (partial called-at-least? 1))
 (def called-at-least-twice? (partial called-at-least? 2))
 (def called-at-least-thrice? (partial called-at-least? 3))
 
-;; at most
+(defn called-at-most-n? [n f]
+  (<= (call-count f) n))
+
+(def called-no-more-than-once? (partial called-at-most-n? 1))
+(def called-no-more-than-twice? (partial called-at-most-n? 2))
+(def called-no-more-than-thrice? (partial called-at-most-n? 3))
+(defn called-no-more-than-n? [n f] (called-at-most-n? n f))
 
 ;; first-call
 ;; second-call
 ;; third-call
 ;; last-call
 ;; nth-call
-
-;; we don't keep this state - perhaps store a timestamp for each call?
-;; called-before (another spy)
-;; called-after
 
 ;; called with types / called with matching...
 

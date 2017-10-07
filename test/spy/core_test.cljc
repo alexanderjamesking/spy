@@ -34,6 +34,25 @@
 
       (is  (s/called-at-least? 42 f)))))
 
+(deftest called-at-most
+  (testing "called at most once"
+    (let [f (s/stub 42)]
+      (is (s/called-at-most-n? 1 f))
+      (is (s/called-no-more-than-once? f))
+      (f)
+      (f)
+      (is (s/called-no-more-than-twice? f))
+
+      (is (false? (s/called-at-most-n? 1 f)))
+      (f)
+
+      (is (false? (s/called-no-more-than-once? f)))
+      (is (false? (s/called-no-more-than-twice? f)))
+
+      (doall (repeatedly 42 f))
+
+      (is  (s/called-at-most-n? 50 f)))))
+
 (deftest reset-spy
   (testing "resetting the call count for a spy"
     (let [f (s/stub 1863)]
