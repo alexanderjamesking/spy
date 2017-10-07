@@ -1,12 +1,3 @@
-# clj-spy
-
-Spy - a Clojure and ClojureScript library for stubs, spies and mocks
-
-[![Build Status](https://travis-ci.org/alexanderjamesking/spy.svg?branch=master)](https://travis-ci.org/alexanderjamesking/spy)
-[![Clojars Project](https://img.shields.io/clojars/v/clj-spy.svg)](https://clojars.org/clj-spy)
-
-## License
-```
 MIT License
 
 Copyright (c) 2017 Alex King
@@ -28,4 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```

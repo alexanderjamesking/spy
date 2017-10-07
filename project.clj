@@ -1,8 +1,10 @@
 (defproject clj-spy "0.1.0-SNAPSHOT"
   :description "Spy - a Clojure and ClojureScript library for stubs, spies and mocks"
   :url "http://www.alexanderjamesking.com"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :license {:name "MIT License"
+            :url "https://opensource.org/licenses/MIT"
+            :year 2017
+            :key "mit"}
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.8"]]
   :dependencies [[org.clojure/clojure "1.8.0"]
