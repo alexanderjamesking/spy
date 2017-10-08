@@ -107,7 +107,8 @@
       (f "bar")
 
       (is (= ["foo"] (s/second-call f)))
-      (is (= ["bar"] (s/third-call f)))))
+      (is (= ["bar"] (s/third-call f)))
+      (is (= ["bar"] (s/last-call f)))))
 
   (testing "error cases"
     (testing "returns nil when there are no calls"

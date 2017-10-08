@@ -65,6 +65,9 @@
 (def second-call (partial nth-call 1))
 (def third-call (partial nth-call 2))
 
+(defn last-call [f]
+  (last (calls f)))
+
 ;; called with types / called with matching...
 
 ;; threw - check if spy threw an exception
