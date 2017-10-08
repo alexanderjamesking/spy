@@ -9,6 +9,7 @@
             [lein-doo "0.1.8"]]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.946"]]
+  :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target" "out"]
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test"]
