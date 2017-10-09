@@ -2,18 +2,20 @@
 
 (def no-calls [])
 
-(defn spy [f]
-  (let [calls (atom no-calls)]
-    (with-meta (fn [& args]
-                 (swap! calls conj args)
-                 (apply f args))
-      {:calls calls})))
+(defn spy
+  ([] (spy (constantly nil)))
+  ([f] (let [calls (atom no-calls)]
+         (with-meta (fn [& args]
+                      (swap! calls conj args)
+                      (apply f args))
+           {:calls calls}))))
 
 (defn reset-calls! [f]
   (reset! (-> f meta :calls) no-calls))
 
-(defn stub [value]
-  (spy (constantly value)))
+(defn stub
+  ([] (spy))
+  ([value] (spy (constantly value))))
 
 (defn calls [f]
   (some-> f meta :calls deref))

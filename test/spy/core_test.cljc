@@ -2,6 +2,16 @@
   (:require [clojure.test :refer [deftest testing is]]
             [spy.core :as s]))
 
+(deftest spy-that-returns-nil
+  (testing "calling spy with no arguments gives a spy that returns nil"
+    (let [f (s/spy)]
+      (is (nil? (f)))
+      (is (s/called? f))))
+  (testing "calling stub with no arguments gives a spy that returns nil"
+    (let [f (s/stub)]
+      (is (nil? (f)))
+      (is (s/called? f)))))
+
 (deftest stub-call-counts
   (testing "call counts"
     (let [f (s/stub 42)]
