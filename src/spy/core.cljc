@@ -23,8 +23,9 @@
            {:calls calls
             :responses responses}))))
 
-(defn reset-calls! [f]
-  (reset! (-> f meta :calls) []))
+(defn reset-spy! [f]
+  (reset! (-> f meta :calls) [])
+  (reset! (-> f meta :responses) []))
 
 (defn stub
   ([] (spy))

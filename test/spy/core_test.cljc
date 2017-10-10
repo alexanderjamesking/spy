@@ -69,8 +69,9 @@
     (let [f (s/stub 1863)]
       (doall (repeatedly 3 f))
       (is (s/called-thrice? f))
-      (s/reset-calls! f)
-      (is (s/not-called? f)))))
+      (s/reset-spy! f)
+      (is (s/not-called? f))
+      (is (nil? (s/first-response f))))))
 
 (deftest spy-call-counts
   (testing "call counts"
