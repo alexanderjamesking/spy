@@ -4,11 +4,21 @@
 
 (defn spy
   ([] (spy (constantly nil)))
-  ([f] (let [calls (atom no-calls)]
+  ([f] (let [calls (atom no-calls)
+             responses (atom [])]
          (with-meta (fn [& args]
                       (swap! calls conj args)
-                      (apply f args))
-           {:calls calls}))))
+                      (try
+                        (let [response (apply f args)]
+                          (swap! responses conj response)
+                          response)
+                        (catch #?(:clj Exception
+                                  :cljs js/Object) e
+                            (swap! responses conj {:thrown #?(:clj (Throwable->map e)
+                                                              :cljs e)})
+                          (throw e))))
+           {:calls calls
+            :responses responses}))))
 
 (defn reset-calls! [f]
   (reset! (-> f meta :calls) no-calls))
@@ -17,8 +27,17 @@
   ([] (spy))
   ([value] (spy (constantly value))))
 
+(defn mock
+  ([] (spy)))
+
+(defn stub-throws [exception]
+  (spy (fn [] (throw exception))))
+
 (defn calls [f]
   (some-> f meta :calls deref))
+
+(defn responses [f]
+  (some-> f meta :responses deref))
 
 (defn call-count [f]
   (count (calls f)))

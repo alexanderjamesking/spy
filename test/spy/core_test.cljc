@@ -1,5 +1,5 @@
 (ns spy.core-test
-  (:require [clojure.test :refer [deftest testing is]]
+  (:require [clojure.test :refer [deftest is testing]]
             [spy.core :as s]))
 
 (deftest spy-that-returns-nil
@@ -130,3 +130,13 @@
   (let [f (s/spy (fn [] "I have no arguments"))]
     (f)
     (is (s/called-once? f))))
+
+(deftest spy-throws-exception
+  (testing "the spy catches and rethrows exceptions"
+    (let [f (s/stub-throws (#?(:clj Exception. :cljs js/Error) "Goodbye World!"))]
+      (is (thrown? #?(:clj Exception :cljs js/Object) (f)))
+      (is (= 1 (count (s/responses f))))
+      (is (contains? (-> (meta f) :responses deref first) :thrown))
+      #_(println (-> (meta f) :responses deref first))
+
+      #_(is (= "Goodbye World!" (-> (meta f) :responses deref first :cause))))))
