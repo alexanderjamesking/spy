@@ -136,7 +136,7 @@
     (let [f (s/stub-throws (#?(:clj Exception. :cljs js/Error) "Goodbye World!"))]
       (is (thrown? #?(:clj Exception :cljs js/Object) (f)))
       (is (= 1 (count (s/responses f))))
-      (is (contains? (-> (meta f) :responses deref first) :thrown))
+      (is (contains? (first (s/responses f)) :thrown))
       #_(println (-> (meta f) :responses deref first))
 
       #_(is (= "Goodbye World!" (-> (meta f) :responses deref first :cause))))))
