@@ -1,4 +1,4 @@
-(defproject clj-spy "0.7.0"
+(defproject clj-spy "0.8.0-SNAPSHOT"
   :description "Spy - a Clojure and ClojureScript library for stubs, spies and mocks"
   :url "http://www.alexanderjamesking.com"
   :license {:name "MIT License"
