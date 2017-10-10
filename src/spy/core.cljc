@@ -105,6 +105,3 @@
   (last (calls f)))
 
 ;; called with types / called with matching...
-
-;; threw - check if spy threw an exception
-;; always threw
