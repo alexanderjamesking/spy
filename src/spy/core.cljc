@@ -5,17 +5,22 @@
 (defn spy
   ([] (spy (constantly nil)))
   ([f] (let [calls (atom no-calls)
-             responses (atom [])]
+             responses (atom [])
+             record-call! (fn [args] (swap! calls conj args))
+             record-response! (fn [response] (swap! responses conj response))
+             record-exception! (fn [e]
+                                 (swap! responses
+                                        conj
+                                        {:thrown #?(:clj (Throwable->map e)
+                                                    :cljs e)}))]
          (with-meta (fn [& args]
-                      (swap! calls conj args)
+                      (record-call! args)
                       (try
                         (let [response (apply f args)]
-                          (swap! responses conj response)
+                          (record-response! response)
                           response)
-                        (catch #?(:clj Exception
-                                  :cljs js/Object) e
-                            (swap! responses conj {:thrown #?(:clj (Throwable->map e)
-                                                              :cljs e)})
+                        (catch #?(:clj Exception :cljs js/Object) e
+                            (record-exception! e)
                           (throw e))))
            {:calls calls
             :responses responses}))))
@@ -38,6 +43,16 @@
 
 (defn responses [f]
   (some-> f meta :responses deref))
+
+(defn nth-response [n f]
+  (nth (responses f) n nil))
+
+(def first-response (partial nth-response 0))
+(def second-response (partial nth-response 1))
+(def third-response (partial nth-response 2))
+
+(defn last-response [f]
+  (last (responses f)))
 
 (defn call-count [f]
   (count (calls f)))
@@ -80,7 +95,7 @@
 (defn nth-call [n f]
   (let [f-calls (calls f)]
     (when (< n (count f-calls))
-      (nth f-calls n))))
+      (nth f-calls n nil))))
 
 (def first-call (partial nth-call 0))
 (def second-call (partial nth-call 1))
@@ -93,10 +108,3 @@
 
 ;; threw - check if spy threw an exception
 ;; always threw
-
-;; returned
-
-;; return values
-;; first return value
-;; nth-return-value
-;; last return value

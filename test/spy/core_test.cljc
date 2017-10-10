@@ -118,7 +118,9 @@
 
       (is (= ["foo"] (s/second-call f)))
       (is (= ["bar"] (s/third-call f)))
-      (is (= ["bar"] (s/last-call f)))))
+      (is (= ["bar"] (s/last-call f)))
+
+      (is (= nil (s/nth-call 42 f)))))
 
   (testing "error cases"
     (testing "returns nil when there are no calls"
@@ -140,3 +142,25 @@
       #_(println (-> (meta f) :responses deref first))
 
       #_(is (= "Goodbye World!" (-> (meta f) :responses deref first :cause))))))
+
+(deftest response-values
+  (testing "first response"
+    (let [f (s/stub 42)]
+      (f)
+      (is (= 42 (s/first-response f)))))
+
+  (testing "nth response"
+    (let [f (s/spy (fn [x] (+ x 42)))]
+      (f 1)
+      (f 2)
+      (f 3)
+      (f 4)
+      (is (= 43 (s/first-response f)))
+      (is (= 43 (s/nth-response 0 f)))
+      (is (= 44 (s/second-response f)))
+      (is (= 44 (s/nth-response 1 f)))
+      (is (= 45 (s/nth-response 2 f)))
+      (is (= 45 (s/third-response f)))
+      (is (= 46 (s/nth-response 3 f)))
+      (is (= 46 (s/last-response f)))
+      (is (= nil (s/nth-response 99 f))))))
