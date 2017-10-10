@@ -32,8 +32,8 @@
   ([] (spy))
   ([value] (spy (constantly value))))
 
-(defn mock
-  ([] (spy)))
+(defn mock [f]
+  (spy f))
 
 (defn stub-throws [exception]
   (spy (fn [] (throw exception))))

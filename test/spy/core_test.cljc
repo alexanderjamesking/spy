@@ -154,3 +154,13 @@
       (is (= 46 (s/nth-response 3 f)))
       (is (= 46 (s/last-response f)))
       (is (= nil (s/nth-response 99 f))))))
+
+(deftest mock-test
+  (testing "a mock is just a spy of a function with some behaviour"
+    (let [f (s/mock (fn [x] (if (= 1 x)
+                              :one
+                              :something-else)))]
+      (is (= :one (f 1)))
+      (is (s/called-once? f))
+      (is (= :something-else (f 42)))
+      (is (s/called-twice? f)))))
