@@ -1,10 +1,8 @@
 (ns spy.core)
 
-(def no-calls [])
-
 (defn spy
   ([] (spy (constantly nil)))
-  ([f] (let [calls (atom no-calls)
+  ([f] (let [calls (atom [])
              responses (atom [])
              record-call! (fn [args] (swap! calls conj args))
              record-response! (fn [response] (swap! responses conj response))
@@ -26,7 +24,7 @@
             :responses responses}))))
 
 (defn reset-calls! [f]
-  (reset! (-> f meta :calls) no-calls))
+  (reset! (-> f meta :calls) []))
 
 (defn stub
   ([] (spy))
@@ -104,4 +102,4 @@
 (defn last-call [f]
   (last (calls f)))
 
-;; called with types / called with matching...
+;; TODO: called with types, called with matching
