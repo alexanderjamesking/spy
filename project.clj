@@ -7,8 +7,9 @@
             :key "mit"}
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.8"]]
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.946"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.10.238"]]
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
   :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target" "out"]
   :cljsbuild {:builds [{:id "test"
