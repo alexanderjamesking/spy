@@ -18,11 +18,45 @@ See [Test Doubles, Fakes, Mocks and Stubs](https://blog.pragmatists.com/test-dou
 
 This library focuses on the Spy part hence the name, but it can be used for all 3 of the above.
 
-To implement a Stub in Clojure you can use [constantly](https://clojuredocs.org/clojure.core/constantly), you don't need a library for that!
+To implement a Stub in Clojure you can use [constantly](https://clojuredocs.org/clojure.core/constantly), you don't need a library for that! but if you're interested in testing calls to the stub then this library provides that by wrapping constantly in a spy.
 
 To implement a Spy you need a way to record calls to the function, this library does this using an [atom](https://clojuredocs.org/clojure.core/atom) and attaching the calls to the function, and responses from the function to the function itself using [metadata](https://clojure.org/reference/metadata).
 
 To implement a Fake you just need to implement a function that has the same contract as the one you're replacing, the best person to do this is you, so this library doesn't deal with fakes.
+
+## Usage
+
+Include the dependency in your project: ```[clj-spy "0.9.0"]```
+
+Require it in the REPL:
+```(require '[spy.core :as s])```
+
+Or in your test file:
+```(:require [spy.core :as s])```
+
+### Stubs
+
+```clojure
+
+(let [f (s/stub 42)] ;; create a stub that returns a hardcoded value
+      (is (s/not-called? f)) ;; verify the stub has not been called yet
+      (f) ;; call the stub
+      (is (s/called? f))
+      (is (s/called-once? f))
+      (f) ;; call it for a second time
+      (f) ;; call if for a third time
+      (is (s/called-n? 3 f))) ;; verify it was called 3 times
+```
+
+### Spies
+
+```clojure
+(let [f (s/spy (fn [x y] (+ x y)))] ;; create a spy that wraps a simple adder function
+      (is (s/not-called? f)) ;; verify it hasn't been called yet
+      (is (= 3 (f 1 2))) ;; call the function 
+      (is (s/called-with? f 1 2)) ;; verify it was called with the arguments
+      (is (s/called-once? f))) ;; verify it was called only once
+```
 
 
 ## License
