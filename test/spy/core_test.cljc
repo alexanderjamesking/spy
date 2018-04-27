@@ -20,10 +20,7 @@
       (is (s/called? f))
       (is (s/called-once? f))
       (f)
-      (is (s/called? f))
-      (is (s/called-twice? f))
       (f)
-      (is (s/called-thrice? f))
       (is (s/called-n? 3 f)))))
 
 (deftest called-at-least
@@ -33,12 +30,6 @@
       (f)
       (is (s/called-at-least? 1 f))
       (is (s/called-at-least-once? f))
-
-      (f)
-      (is (s/called-at-least-twice? f))
-
-      (f)
-      (is (s/called-at-least-thrice? f))
 
       (doall (repeatedly 42 f))
 
@@ -51,14 +42,11 @@
       (is (s/called-no-more-than-once? f))
       (f)
       (f)
-      (is (s/called-no-more-than-twice? f))
 
       (is (false? (s/called-at-most-n? 1 f)))
       (f)
 
       (is (false? (s/called-no-more-than-once? f)))
-      (is (false? (s/called-no-more-than-twice? f)))
-      (is (s/called-no-more-than-thrice? f))
 
       (doall (repeatedly 42 f))
 
@@ -68,7 +56,7 @@
   (testing "resetting the call count for a spy"
     (let [f (s/stub 1863)]
       (doall (repeatedly 3 f))
-      (is (s/called-thrice? f))
+      (is (s/called-n? 3 f))
       (s/reset-spy! f)
       (is (s/not-called? f))
       (is (nil? (s/first-response f))))))
@@ -117,8 +105,6 @@
       (f "foo")
       (f "bar")
 
-      (is (= ["foo"] (s/second-call f)))
-      (is (= ["bar"] (s/third-call f)))
       (is (= ["bar"] (s/last-call f)))
 
       (is (= nil (s/nth-call 42 f)))))
@@ -148,10 +134,8 @@
       (f 4)
       (is (= 43 (s/first-response f)))
       (is (= 43 (s/nth-response 0 f)))
-      (is (= 44 (s/second-response f)))
       (is (= 44 (s/nth-response 1 f)))
       (is (= 45 (s/nth-response 2 f)))
-      (is (= 45 (s/third-response f)))
       (is (= 46 (s/nth-response 3 f)))
       (is (= 46 (s/last-response f)))
       (is (= nil (s/nth-response 99 f))))))
@@ -163,5 +147,4 @@
                               :something-else)))]
       (is (= :one (f 1)))
       (is (s/called-once? f))
-      (is (= :something-else (f 42)))
-      (is (s/called-twice? f)))))
+      (is (= :something-else (f 42))))))

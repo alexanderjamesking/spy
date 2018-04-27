@@ -47,8 +47,6 @@
   (nth (responses f) n nil))
 
 (def first-response (partial nth-response 0))
-(def second-response (partial nth-response 1))
-(def third-response (partial nth-response 2))
 
 (defn last-response [f]
   (last (responses f)))
@@ -61,8 +59,6 @@
 
 (def not-called? (partial called-n? 0))
 (def called-once? (partial called-n? 1))
-(def called-twice? (partial called-n? 2))
-(def called-thrice? (partial called-n? 3))
 
 (defn called-with? [f & args]
   (some #(= args %) (calls f)))
@@ -80,15 +76,11 @@
 
 (def called? (partial called-at-least? 1))
 (def called-at-least-once? (partial called-at-least? 1))
-(def called-at-least-twice? (partial called-at-least? 2))
-(def called-at-least-thrice? (partial called-at-least? 3))
 
 (defn called-at-most-n? [n f]
   (<= (call-count f) n))
 
 (def called-no-more-than-once? (partial called-at-most-n? 1))
-(def called-no-more-than-twice? (partial called-at-most-n? 2))
-(def called-no-more-than-thrice? (partial called-at-most-n? 3))
 (defn called-no-more-than-n? [n f] (called-at-most-n? n f))
 
 (defn nth-call [n f]
@@ -102,5 +94,3 @@
 
 (defn last-call [f]
   (last (calls f)))
-
-;; TODO: called with types, called with matching
