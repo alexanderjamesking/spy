@@ -51,13 +51,29 @@ Or in your test file:
 ### Spies
 
 ```clojure
-(let [f (s/spy (fn [x y] (+ x y)))] ;; create a spy that wraps a simple adder function
+
+(defn my-adder [x y]
+  (+ x y))
+
+(let [f (s/spy my-adder)] ;; create a spy that wraps a simple adder function
       (is (s/not-called? f)) ;; verify it hasn't been called yet
       (is (= 3 (f 1 2))) ;; call the function 
       (is (s/called-with? f 1 2)) ;; verify it was called with the arguments
       (is (s/called-once? f))) ;; verify it was called only once
 ```
 
+## Mocks
+
+```s/mock``` is an alias for ```s/spy```, it's up to you to write the function that mocks the behaviour:
+
+```clojure
+(let [f (s/mock (fn [x] (if (= 1 x)
+                              :one
+                              :something-else)))]
+      (is (= :one (f 1)))
+      (is (s/called-once? f))
+      (is (= :something-else (f 42))))
+```
 
 ## License
 ```
