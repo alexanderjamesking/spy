@@ -22,7 +22,7 @@ To implement a Stub in Clojure you can use [constantly](https://clojuredocs.org/
 
 To implement a Spy you need a way to record calls to the function, this library does this using an [atom](https://clojuredocs.org/clojure.core/atom) and attaching the calls to the function, and responses from the function to the function itself using [metadata](https://clojure.org/reference/metadata).
 
-To implement a Fake you just need to implement a function that has the same contract as the one you're replacing, the best person to do this is you, so this library doesn't deal with fakes.
+To implement a Fake / Mock / Test Double you just need to implement a function that has the same contract as the one you're replacing, the best person to do this is you, so this library doesn't deal with fakes.
 
 ## Usage
 
@@ -62,7 +62,7 @@ Or in your test file:
       (is (s/called-once? f))) ;; verify it was called only once
 ```
 
-## Mocks
+### Mocks
 
 ```s/mock``` is an alias for ```s/spy```, it's up to you to write the function that mocks the behaviour:
 
