@@ -3,11 +3,9 @@
 
 # Spy
 
-Spy - a Clojure and ClojureScript library for stubs, spies and mocks.
+Spy - a Clojure and ClojureScript library for stubs, spies and mocks. This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
 
-This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
-
-It records calls and responses to a function, and allows you to verify interactions with the function.
+It records calls and responses to and from a function, allowing you to verify interactions.
 
 Typically you want one of the following:
 
@@ -17,37 +15,49 @@ Typically you want one of the following:
 
 See [Test Doubles, Fakes, Mocks and Stubs](https://blog.pragmatists.com/test-doubles-fakes-mocks-and-stubs-1a7491dfa3da) for more detail.
 
-## Usage
+Examples for all functions can be found in the tests folder.
 
-Include the dependency in your project: ```[clj-spy "0.9.0"]```
+## Usage
 
 ### REPL
 
 ```clojure
-user> (require '[spy.core :as spy])
-nil
-user> (defn adder [x y]
-        (+ x y))
-#'user/adder
-user> (def spy-adder (spy/spy adder))
-#'user/spy-adder
-user> (spy/calls spy-adder)
-[]
-user> (spy/responses spy-adder)
-[]
-user> (spy-adder 1 2)
-3
-user> (spy/calls spy-adder)
-[(1 2)]
-user> (spy/responses spy-adder)
-[3]
-user> (spy-adder 40 2)
-42
-user> (spy/calls spy-adder)
-[(1 2) (40 2)]
-user> (spy/responses spy-adder)
-[3 42]
-user>
+(require '[spy.core :as spy])
+
+(defn adder [x y]
+  (+ x y))
+
+(def spy-adder (spy/spy adder))
+
+(spy/calls spy-adder)
+;; []
+
+(spy/responses spy-adder)
+;; []
+
+(spy-adder 1 2)
+;; 3
+
+;; the calls and responses are stored on the spy
+(meta spy-adder) 
+;; {:calls #atom[[(1 2)] 0x7612740d], :responses #atom[[3] 0x26525904]}
+
+;; they can be accessed via spy/calls
+(spy/calls spy-adder)
+;; [(1 2)]
+
+;; and spy/responses
+(spy/responses spy-adder)
+;; [3]
+
+(spy-adder 40 2)
+;; 42
+
+(spy/calls spy-adder)
+;; [(1 2) (40 2)]
+
+(spy/responses spy-adder)
+;; [3 42]
 ```
 
 ### Spies
