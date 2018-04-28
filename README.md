@@ -128,6 +128,14 @@ If you spy on a function that throws an exception then Spy will catch your excep
       (is (contains? (spy/first-response f) :thrown)))
 ```
 
+## Contributing
+
+Pull requests are welcome. Please run the test suite and check that all tests pass prior to submission.
+
+```
+$ lein test
+```
+
 ## License
 ```
 MIT License
