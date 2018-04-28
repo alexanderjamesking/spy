@@ -104,13 +104,10 @@ Or in your test file:
 
 ### Exceptions
 
-If you spy on a function that throws an exception then Spy will catch your exception, record it in the responses, then re-throw the original exception, thus enabling you to test that the exception was thrown. A helper function is provided:
+If you spy on a function that throws an exception then Spy will catch your exception, record it in the responses, then re-throw the original exception, thus enabling you to test that the exception was thrown. A ```stub-throws``` helper function is provided.
 
-```clojure
-(defn stub-throws [exception]
-  (spy (fn [] (throw exception))))```
+#### Clojure
 
-Usage:
 ```clojure
 (let [f (s/stub-throws (Exception. "Goodbye World!"))]
       (is (thrown? Exception (f)))
@@ -119,7 +116,9 @@ Usage:
       (is (= "Goodbye World!" (-> (s/first-response f) :thrown :cause))))
 ```
 
-```clojurescript
+#### ClojureScript
+
+```clojure
 (let [f (s/stub-throws (js/Error "Goodbye World!"))]
       (is (thrown? js/Object (f)))
       (is (= 1 (count (s/responses f))))
