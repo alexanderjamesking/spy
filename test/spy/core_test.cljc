@@ -26,14 +26,14 @@
 (deftest called-at-least
   (testing "called at least once"
     (let [f (spy/stub 42)]
-      (is (false? (spy/called-at-least? 1 f)))
+      (is (false? (spy/called-at-least-n-times? 1 f)))
       (f)
-      (is (spy/called-at-least? 1 f))
+      (is (spy/called-at-least-n-times? 1 f))
       (is (spy/called-at-least-once? f))
 
       (doall (repeatedly 42 f))
 
-      (is  (spy/called-at-least? 42 f)))))
+      (is  (spy/called-at-least-n-times? 42 f)))))
 
 (deftest called-at-most
   (testing "called at most once"

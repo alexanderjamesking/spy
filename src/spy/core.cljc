@@ -90,38 +90,74 @@
   [n f]
   (= n (call-count f)))
 
-(def not-called? (partial called-n-times? 0))
-(def called-once? (partial called-n-times? 1))
+(defn not-called?
+  "Returns true if the spy f was never called, false if not."
+  [f]
+  (called-n-times? 0 f))
 
-(defn called-with? [f & args]
+(defn called-once?
+  "Returns true if the spy f was called once, false if not."
+  [f]
+  (called-n-times? 1 f))
+
+(defn called-with?
+  "Returns true if any of the calls to the spy f match the args, false if no calls match."
+  [f & args]
   (not (nil? (some #(= args %) (calls f)))))
 
-(def not-called-with? (complement called-with?))
+(defn not-called-with?
+  "Returns true if the no calls to the spy f match the args, false if a call matches."
+  [f & args]
+  (not (apply called-with? f args)))
 
-(defn called-once-with? [f & args]
+(defn called-once-with?
+  "Returns true if there was only one call to the spy f and the args match, false if not."
+  [f & args]
   (= [args] (calls f)))
 
-(defn called-at-least-n? [n f]
+(defn called-at-least-n-times?
+  "Returns true if the spy f was called at least n times, false if not."
+  [n f]
   (>= (call-count f) n))
 
-(defn called-at-least? [n f]
-  (called-at-least-n? n f))
+(defn called?
+  "Returns true is the spy f was called, false if not."
+  [f]
+  (called-at-least-n-times? 1 f))
 
-(def called? (partial called-at-least? 1))
-(def called-at-least-once? (partial called-at-least? 1))
+(defn called-at-least-once?
+  "Returns true if the spy f was called at least once, false if not."
+  [f]
+  (called-at-least-n-times? 1 f))
 
-(defn called-at-most-n? [n f]
+(defn called-at-most-n?
+  "Returns true if the spy f was called no more than n times, false if not."
+  [n f]
   (<= (call-count f) n))
 
-(def called-no-more-than-once? (partial called-at-most-n? 1))
-(defn called-no-more-than-n? [n f] (called-at-most-n? n f))
+(defn called-no-more-than-once?
+  "Returns true if the spy f was called once or not at all, false if not."
+  [f]
+  (called-at-most-n? 1 f))
 
-(defn nth-call [n f]
+(defn called-no-more-than-n-times?
+  "Returns true if the spy f was called no more than n times, false if not."
+  [n f]
+  (called-at-most-n? n f))
+
+(defn nth-call
+  "Returns the nth call to the spy f for the index n."
+  [n f]
   (let [f-calls (calls f)]
     (when (< n (count f-calls))
       (nth f-calls n nil))))
 
-(def first-call (partial nth-call 0))
+(defn first-call
+  "Returns the first call to the spy f"
+  [f]
+  (nth-call 0 f))
 
-(defn last-call [f]
+(defn last-call
+  "Returns the last call to the spy f"
+  [f]
   (last (calls f)))
