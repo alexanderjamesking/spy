@@ -82,18 +82,19 @@
       (is (s/called-with? f 1 2))
       (f 1 2 3)
       (is (s/called-with? f 1 2 3))
+      (is (false? (s/called-with? f 4 5 6)))
       (is (s/not-called-with? f 7 8)))))
 
-(deftest called-with-exactly
+(deftest called-once-with-test
   (let [f (s/spy str)]
     (testing "called with exactly"
       (f "hello world!")
-      (is (s/called-with-exactly? f "hello world!")))
+      (is (s/called-once-with? f "hello world!")))
 
     (testing "returns false if there were other calls"
       (f "foo bar")
-      (is (false? (s/called-with-exactly? f "foo bar")))
-      (is (false? (s/called-with-exactly? f "hello" "world" "!"))))))
+      (is (false? (s/called-once-with? f "foo bar")))
+      (is (false? (s/called-once-with? f "hello" "world" "!"))))))
 
 (deftest nth-call
   (testing "nth call"

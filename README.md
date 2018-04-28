@@ -5,7 +5,7 @@ Spy - a Clojure and ClojureScript library for stubs, spies and mocks.
 [![Build Status](https://travis-ci.org/alexanderjamesking/clj-spy.svg?branch=master)](https://travis-ci.org/alexanderjamesking/clj-spy)
 [![Clojars Project](https://img.shields.io/clojars/v/clj-spy.svg)](https://clojars.org/clj-spy)
 
-This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html). 
+This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
 It records calls and responses to a function, and allows you to verify interactions with the function.
 
 Typically you want one of the following:
@@ -28,8 +28,34 @@ To implement a Fake / Mock / Test Double you just need to implement a function t
 
 Include the dependency in your project: ```[clj-spy "0.9.0"]```
 
-Require it in the REPL:
-```(require '[spy.core :as s])```
+### REPL
+
+```
+user> (require '[spy.core :as spy])
+nil
+user> (defn adder [x y]
+        (+ x y))
+#'user/adder
+user> (def spy-adder (spy/spy adder))
+#'user/spy-adder
+user> (spy/calls spy-adder)
+[]
+user> (spy/responses spy-adder)
+[]
+user> (spy-adder 1 2)
+3
+user> (spy/calls spy-adder)
+[(1 2)]
+user> (spy/responses spy-adder)
+[3]
+user> (spy-adder 40 2)
+42
+user> (spy/calls spy-adder)
+[(1 2) (40 2)]
+user> (spy/responses spy-adder)
+[3 42]
+user>
+```
 
 Or in your test file:
 ```(:require [spy.core :as s])```
@@ -57,7 +83,7 @@ Or in your test file:
 
 (let [f (s/spy my-adder)] ;; create a spy that wraps a simple adder function
       (is (s/not-called? f)) ;; verify it hasn't been called yet
-      (is (= 3 (f 1 2))) ;; call the function 
+      (is (= 3 (f 1 2))) ;; call the function
       (is (s/called-with? f 1 2)) ;; verify it was called with the arguments
       (is (s/called-once? f))) ;; verify it was called only once
 ```

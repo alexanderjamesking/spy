@@ -61,11 +61,11 @@
 (def called-once? (partial called-n? 1))
 
 (defn called-with? [f & args]
-  (some #(= args %) (calls f)))
+  (not (nil? (some #(= args %) (calls f)))))
 
 (def not-called-with? (complement called-with?))
 
-(defn called-with-exactly? [f & args]
+(defn called-once-with? [f & args]
   (= [args] (calls f)))
 
 (defn called-at-least-n? [n f]
@@ -89,8 +89,6 @@
       (nth f-calls n nil))))
 
 (def first-call (partial nth-call 0))
-(def second-call (partial nth-call 1))
-(def third-call (partial nth-call 2))
 
 (defn last-call [f]
   (last (calls f)))
