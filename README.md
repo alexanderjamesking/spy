@@ -39,7 +39,7 @@ Examples for all functions can be found in the tests folder.
 ;; 3
 
 ;; the calls and responses are stored on the spy
-(meta spy-adder) 
+(meta spy-adder)
 ;; {:calls #atom[[(1 2)] 0x7612740d], :responses #atom[[3] 0x26525904]}
 
 ;; they can be accessed via spy/calls
@@ -132,7 +132,7 @@ If you spy on a function that throws an exception then Spy will catch your excep
 ```
 MIT License
 
-Copyright (c) 2018 Alex King
+Copyright (c) 2018 Alexander James King
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
