@@ -1,6 +1,16 @@
 (ns spy.core)
 
 (defn spy
+  "If no function is supplied, returns a function that takes any number of args
+  and returns nil.
+
+  If a function is supplied, returns a function that wraps the function.
+
+  Adds metadata {:calls (atom []) :responses (atom [])} to the function, calls
+  and responses are recorded and stored inside the atoms.
+
+  If an exception is thrown by the function this is caught, recorded as a response
+  nested in a map under the key :thrown, and rethrown."
   ([] (spy (constantly nil)))
   ([f] (let [calls (atom [])
              responses (atom [])
@@ -23,42 +33,65 @@
            {:calls calls
             :responses responses}))))
 
-(defn reset-spy! [f]
+(defn reset-spy!
+  "Resets the calls and responses on the spy f."
+  [f]
   (reset! (-> f meta :calls) [])
   (reset! (-> f meta :responses) []))
 
 (defn stub
+  "Returns a spy function that returns the value supplied, or nil
+  if no value is supplied."
   ([] (spy))
   ([value] (spy (constantly value))))
 
-(defn mock [f]
+(defn mock
+  "An alias for spy, behaviour for the function is provided by the user."
+  [f]
   (spy f))
 
-(defn stub-throws [exception]
+(defn stub-throws
+  "Returns a spy function that throws the exception provided."
+  [exception]
   (spy (fn [] (throw exception))))
 
-(defn calls [f]
+(defn calls
+  "Returns a list of all calls to the spy f."
+  [f]
   (some-> f meta :calls deref))
 
-(defn responses [f]
+(defn responses
+  "Returns a list of all responses returned by the spy f."
+  [f]
   (some-> f meta :responses deref))
 
-(defn nth-response [n f]
+(defn nth-response
+  "Returns the response of the spy f at the index n."
+  [n f]
   (nth (responses f) n nil))
 
-(def first-response (partial nth-response 0))
+(defn first-response
+  "Returns the first response returned by the spy f."
+  [f]
+  (nth-response 0 f))
 
-(defn last-response [f]
+(defn last-response
+  "Returns the last response returned by the spy f."
+  [f]
   (last (responses f)))
 
-(defn call-count [f]
+(defn call-count
+  "Returns the count of the number of calls to the spy f."
+  [f]
   (count (calls f)))
 
-(defn called-n? [n f]
+(defn called-n-times?
+  "Returns true if the spy f was called n times, false if not."
+  [n f]
   (= n (call-count f)))
 
-(def not-called? (partial called-n? 0))
-(def called-once? (partial called-n? 1))
+(def not-called? (partial called-n-times? 0))
+(def called-once? (partial called-n-times? 1))
 
 (defn called-with? [f & args]
   (not (nil? (some #(= args %) (calls f)))))

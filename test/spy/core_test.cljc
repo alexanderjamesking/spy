@@ -21,7 +21,7 @@
       (is (spy/called-once? f))
       (f)
       (f)
-      (is (spy/called-n? 3 f)))))
+      (is (spy/called-n-times? 3 f)))))
 
 (deftest called-at-least
   (testing "called at least once"
@@ -56,7 +56,7 @@
   (testing "resetting the call count for a spy"
     (let [f (spy/stub 1863)]
       (doall (repeatedly 3 f))
-      (is (spy/called-n? 3 f))
+      (is (spy/called-n-times? 3 f))
       (spy/reset-spy! f)
       (is (spy/not-called? f))
       (is (nil? (spy/first-response f))))))
