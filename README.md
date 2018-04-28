@@ -1,4 +1,4 @@
-# clj-spy
+# Spy
 
 Spy - a Clojure and ClojureScript library for stubs, spies and mocks.
 
@@ -30,7 +30,7 @@ Include the dependency in your project: ```[clj-spy "0.9.0"]```
 
 ### REPL
 
-```
+```clojure
 user> (require '[spy.core :as spy])
 nil
 user> (defn adder [x y]
@@ -92,6 +92,7 @@ Or in your test file:
 
 ```s/mock``` is an alias for ```s/spy```, it's up to you to write the function that mocks the behaviour:
 
+
 ```clojure
 (let [f (s/mock (fn [x] (if (= 1 x)
                               :one
@@ -99,6 +100,30 @@ Or in your test file:
       (is (= :one (f 1)))
       (is (s/called-once? f))
       (is (= :something-else (f 42))))
+```
+
+### Exceptions
+
+If you spy on a function that throws an exception then Spy will catch your exception, record it in the responses, then re-throw the original exception, thus enabling you to test that the exception was thrown. A helper function is provided:
+
+```clojure
+(defn stub-throws [exception]
+  (spy (fn [] (throw exception))))```
+
+Usage:
+```clojure
+(let [f (s/stub-throws (Exception. "Goodbye World!"))]
+      (is (thrown? Exception (f)))
+      (is (= 1 (count (s/responses f))))
+      (is (contains? (s/first-response f) :thrown))
+      (is (= "Goodbye World!" (-> (s/first-response f) :thrown :cause))))
+```
+
+```clojurescript
+(let [f (s/stub-throws (js/Error "Goodbye World!"))]
+      (is (thrown? js/Object (f)))
+      (is (= 1 (count (s/responses f))))
+      (is (contains? (s/first-response f) :thrown)))
 ```
 
 ## License
