@@ -5,17 +5,11 @@
 
 Spy - a Clojure and ClojureScript library for stubs, spies and mocks. This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
 
-It records calls and responses to and from a function, allowing you to verify interactions.
+It records calls and responses to and from a function, allowing you to verify interactions. Terms used in this library are as follows, there are many different names for Mocks, see [Test Doubles, Fakes, Mocks and Stubs](https://blog.pragmatists.com/test-doubles-fakes-mocks-and-stubs-1a7491dfa3da) for more detail.
 
-Typically you want one of the following:
-
-1. Stub - A function that returns a hardcoded value
-2. Spy - A wrapper around a function so you can verify interactions with the function
-3. Fake / Mock / Test Double - A function with a fake implementation that you want to use instead of the real thing
-
-See [Test Doubles, Fakes, Mocks and Stubs](https://blog.pragmatists.com/test-doubles-fakes-mocks-and-stubs-1a7491dfa3da) for more detail.
-
-Examples for all functions can be found in the tests folder.
+1. Stub - function that returns a hardcoded value
+2. Spy - wrapper around a function allowing verification of interactions with the function
+3. Mock  - function with a fake implementation to be used in place of the real thing
 
 ## Usage
 
