@@ -1,6 +1,6 @@
 (defproject tortue/spy "0.10.0"
   :description "Spy - a Clojure and ClojureScript library for stubs, spies and mocks"
-  :url "http://www.alexanderjamesking.com"
+  :url "https://github.com/alexanderjamesking/spy"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"
             :year 2017
