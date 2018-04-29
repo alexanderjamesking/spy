@@ -21,42 +21,42 @@
       (is (spy/called-once? f))
       (f)
       (f)
-      (is (spy/called-n-times? 3 f)))))
+      (is (spy/called-n-times? f 3)))))
 
 (deftest called-at-least
   (testing "called at least once"
     (let [f (spy/stub 42)]
-      (is (false? (spy/called-at-least-n-times? 1 f)))
+      (is (false? (spy/called-at-least-n-times? f 1)))
       (f)
-      (is (spy/called-at-least-n-times? 1 f))
+      (is (spy/called-at-least-n-times? f 1))
       (is (spy/called-at-least-once? f))
 
       (doall (repeatedly 42 f))
 
-      (is  (spy/called-at-least-n-times? 42 f)))))
+      (is  (spy/called-at-least-n-times? f 42)))))
 
 (deftest called-at-most
   (testing "called at most once"
     (let [f (spy/stub 42)]
-      (is (spy/called-no-more-than-n-times? 1 f))
+      (is (spy/called-no-more-than-n-times? f 1))
       (is (spy/called-no-more-than-once? f))
       (f)
       (f)
 
-      (is (false? (spy/called-no-more-than-n-times? 1 f)))
+      (is (false? (spy/called-no-more-than-n-times? f 1)))
       (f)
 
       (is (false? (spy/called-no-more-than-once? f)))
 
       (doall (repeatedly 42 f))
 
-      (is  (spy/called-no-more-than-n-times? 50 f)))))
+      (is  (spy/called-no-more-than-n-times? f 50)))))
 
 (deftest reset-spy
   (testing "resetting the call count for a spy"
     (let [f (spy/stub 1863)]
       (doall (repeatedly 3 f))
-      (is (spy/called-n-times? 3 f))
+      (is (spy/called-n-times? f 3))
       (spy/reset-spy! f)
       (is (spy/not-called? f))
       (is (nil? (spy/first-response f))))))
@@ -100,7 +100,7 @@
   (testing "nth call"
     (let [f (spy/spy keyword)]
       (f "bingo")
-      (is (= ["bingo"] (spy/nth-call 0 f)))
+      (is (= ["bingo"] (spy/nth-call f 0)))
       (is (= ["bingo"] (spy/first-call f)))
 
       (f "foo")
@@ -108,13 +108,13 @@
 
       (is (= ["bar"] (spy/last-call f)))
 
-      (is (= nil (spy/nth-call 42 f)))))
+      (is (= nil (spy/nth-call f 42)))))
 
   (testing "error cases"
     (testing "returns nil when there are no calls"
-      (is (nil? (spy/nth-call 5 (spy/spy str)))))
+      (is (nil? (spy/nth-call (spy/spy str) 5))))
     (testing "returns nil when the function passed is not a spy"
-      (is (nil? (spy/nth-call 5 str))))))
+      (is (nil? (spy/nth-call str 5))))))
 
 (deftest function-with-no-args
   (let [f (spy/spy (fn [] "I have no arguments"))]
@@ -134,12 +134,12 @@
       (f 3)
       (f 4)
       (is (= 43 (spy/first-response f)))
-      (is (= 43 (spy/nth-response 0 f)))
-      (is (= 44 (spy/nth-response 1 f)))
-      (is (= 45 (spy/nth-response 2 f)))
-      (is (= 46 (spy/nth-response 3 f)))
+      (is (= 43 (spy/nth-response f 0)))
+      (is (= 44 (spy/nth-response f 1)))
+      (is (= 45 (spy/nth-response f 2)))
+      (is (= 46 (spy/nth-response f 3)))
       (is (= 46 (spy/last-response f)))
-      (is (= nil (spy/nth-response 99 f))))))
+      (is (= nil (spy/nth-response f 99))))))
 
 (deftest mock-test
   (testing "a mock is just a spy of a function with some behaviour"

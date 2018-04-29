@@ -67,13 +67,13 @@
 
 (defn nth-response
   "Returns the response of the spy f at the index n."
-  [n f]
+  [f n]
   (nth (responses f) n nil))
 
 (defn first-response
   "Returns the first response returned by the spy f."
   [f]
-  (nth-response 0 f))
+  (nth-response f 0))
 
 (defn last-response
   "Returns the last response returned by the spy f."
@@ -87,18 +87,18 @@
 
 (defn called-n-times?
   "Returns true if the spy f was called n times, false if not."
-  [n f]
+  [f n]
   (= n (call-count f)))
 
 (defn not-called?
   "Returns true if the spy f was never called, false if not."
   [f]
-  (called-n-times? 0 f))
+  (called-n-times? f 0))
 
 (defn called-once?
   "Returns true if the spy f was called once, false if not."
   [f]
-  (called-n-times? 1 f))
+  (called-n-times? f 1))
 
 (defn called-with?
   "Returns true if any of the calls to the spy f match the args, false if no calls match."
@@ -117,32 +117,32 @@
 
 (defn called-at-least-n-times?
   "Returns true if the spy f was called at least n times, false if not."
-  [n f]
+  [f n]
   (>= (call-count f) n))
 
 (defn called?
   "Returns true is the spy f was called, false if not."
   [f]
-  (called-at-least-n-times? 1 f))
+  (called-at-least-n-times? f 1))
 
 (defn called-at-least-once?
   "Returns true if the spy f was called at least once, false if not."
   [f]
-  (called-at-least-n-times? 1 f))
+  (called-at-least-n-times? f 1))
 
 (defn called-no-more-than-n-times?
   "Returns true if the spy f was called no more than n times, false if not."
-  [n f]
+  [f n]
   (<= (call-count f) n))
 
 (defn called-no-more-than-once?
   "Returns true if the spy f was called once or not at all, false if not."
   [f]
-  (called-no-more-than-n-times? 1 f))
+  (called-no-more-than-n-times? f 1))
 
 (defn nth-call
   "Returns the nth call to the spy f for the index n."
-  [n f]
+  [f n]
   (let [f-calls (calls f)]
     (when (< n (count f-calls))
       (nth f-calls n nil))))
@@ -150,7 +150,7 @@
 (defn first-call
   "Returns the first call to the spy f"
   [f]
-  (nth-call 0 f))
+  (nth-call f 0))
 
 (defn last-call
   "Returns the last call to the spy f"
