@@ -33,7 +33,7 @@
 
       (doall (repeatedly 42 f))
 
-      (is  (spy/called-at-least-n-times? f 42)))))
+      (is (spy/called-at-least-n-times? f 42)))))
 
 (deftest called-at-most
   (testing "called at most once"
@@ -108,7 +108,7 @@
 
       (is (= ["bar"] (spy/last-call f)))
 
-      (is (= nil (spy/nth-call f 42)))))
+      (is (nil? (spy/nth-call f 42)))))
 
   (testing "error cases"
     (testing "returns nil when there are no calls"
@@ -139,7 +139,7 @@
       (is (= 45 (spy/nth-response f 2)))
       (is (= 46 (spy/nth-response f 3)))
       (is (= 46 (spy/last-response f)))
-      (is (= nil (spy/nth-response f 99))))))
+      (is (nil? (spy/nth-response f 99))))))
 
 (deftest mock-test
   (testing "a mock is just a spy of a function with some behaviour"
