@@ -158,16 +158,14 @@ If you're testing synchronous code then you can replace functions using [with-re
     ;; example 1 - wrap the original fn (so it is still called)
     (with-redefs [send-message (spy/spy send-message)]
       (email-beatle :ringo "Hello Ringo!")
-      (is (true? (spy/called-once? send-message)))
-      (is (true? (spy/called-with? send-message
-                                   "ringo.starr@beatles.com"
-                                   "Hello Ringo!")))))
+      (is (spy/called-once? send-message))
+      (is (spy/called-with? send-message "ringo.starr@beatles.com" "Hello Ringo!"))))
 
   (testing "A message is not sent to a Rolling Stone"
     ;; example 2 - call spy without passing a fn (to avoid sending the email)
     (with-redefs [send-message (spy/spy)]
       (email-beatle :mick "Hello Mr Jagger!")
-      (is (true? (spy/not-called? send-message))))))
+      (is (spy/not-called? send-message)))))
 ```
 
 ## Contributing
