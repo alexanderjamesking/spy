@@ -179,7 +179,7 @@ $ lein test
 
 Code coverage:
 ```
-$ lein cloverages
+$ lein cloverage
 ```
 
 Docs:
