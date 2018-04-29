@@ -11,6 +11,11 @@ It records calls and responses to and from a function, allowing you to verify in
 2. Spy - wrapper around a function allowing verification of interactions with the function
 3. Mock  - function with a fake implementation to be used in place of the real thing
 
+## Documentation
+
+* [API Docs](http://alexanderjamesking.github.com/tortue/spy/)
+* [Introducing Spy - a Clojure / ClojureScript library for Spies, Stubs and Mocks](http://alexanderjamesking.com/posts/clojure-spies-stubs-mocks)
+
 ## Usage
 
 ### REPL
@@ -126,8 +131,19 @@ If you spy on a function that throws an exception then Spy will catch your excep
 
 Pull requests are welcome. Please run the test suite and check that all tests pass prior to submission.
 
+Tests:
 ```
 $ lein test
+```
+
+Code coverage:
+```
+$ lein cloverages
+```
+
+Docs:
+```
+$ lein codox
 ```
 
 ## License
