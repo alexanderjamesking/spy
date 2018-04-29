@@ -130,7 +130,7 @@
   [f]
   (called-at-least-n-times? 1 f))
 
-(defn called-at-most-n?
+(defn called-no-more-than-n-times?
   "Returns true if the spy f was called no more than n times, false if not."
   [n f]
   (<= (call-count f) n))
@@ -138,12 +138,7 @@
 (defn called-no-more-than-once?
   "Returns true if the spy f was called once or not at all, false if not."
   [f]
-  (called-at-most-n? 1 f))
-
-(defn called-no-more-than-n-times?
-  "Returns true if the spy f was called no more than n times, false if not."
-  [n f]
-  (called-at-most-n? n f))
+  (called-no-more-than-n-times? 1 f))
 
 (defn nth-call
   "Returns the nth call to the spy f for the index n."
