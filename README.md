@@ -1,6 +1,4 @@
-<img src="logo.svg" width="266">
-
-[![Build Status](https://travis-ci.org/alexanderjamesking/spy.svg?branch=master)](https://travis-ci.org/alexanderjamesking/spy)
+ [![Build Status](https://travis-ci.org/alexanderjamesking/spy.svg?branch=master)](https://travis-ci.org/alexanderjamesking/spy)
 [![Clojars Project](https://img.shields.io/clojars/v/tortue/spy.svg)](https://clojars.org/tortue/spy)
 
 # Spy
