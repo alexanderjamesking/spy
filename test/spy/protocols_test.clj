@@ -29,7 +29,7 @@
   (let [first-spy (spy/stub :h1)
         second-spy (spy/stub :h2)
         x (spy-alpha/protocol-spy HelloTwo {:hello-one first-spy
-                                      :hello-two second-spy})]
+                                            :hello-two second-spy})]
     (is (satisfies? HelloTwo x))
 
     (hello-one x :foo)
@@ -51,7 +51,7 @@
   (let [hello-spy (spy/stub :helloworld)
         se-spy (spy/stub :something-else)
         x (spy-alpha/protocol-spy HelloMulti2 {:hello-multi2 hello-spy
-                                         :something-else se-spy})]
+                                               :something-else se-spy})]
     (is (satisfies? HelloMulti2 x))
     (hello-multi2 x)
     (hello-multi2 x :foo)
