@@ -8,6 +8,8 @@
 (defn protocol-methods [signatures spies]
   (mapcat (partial signature->method spies) signatures))
 
+;; TODO - generate default empty spies if no spy passed in
+;; TODO - sugar to generate stubs/spies?
 (defmacro protocol-spy [protocol spies]
   (let [signatures (:sigs @(resolve protocol))
         methods (protocol-methods signatures spies)]
