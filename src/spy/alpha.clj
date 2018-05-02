@@ -11,5 +11,7 @@
 (defmacro protocol-spy [protocol spies]
   (let [signatures (:sigs @(resolve protocol))
         methods (protocol-methods signatures spies)]
-    `(reify ~protocol
-       ~@methods)))
+    (with-meta
+      `(reify ~protocol
+         ~@methods)
+      spies)))
