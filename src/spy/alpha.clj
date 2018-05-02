@@ -1,8 +1,8 @@
 (ns spy.alpha)
 
-(defn signature->method [spies [k {:keys [arglists name]}]]
-  (for [args arglists]
-    `(~name ~args
+(defn signature->method [spies [k v]]
+  (for [args (:arglists v)]
+    `(~(:name v) ~args
       (apply (get ~spies ~k) ~args))))
 
 (defn protocol-methods [signatures spies]
