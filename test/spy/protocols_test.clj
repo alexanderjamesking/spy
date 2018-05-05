@@ -6,59 +6,56 @@
 (defprotocol Hello
   (hello [this]))
 
+(spy-alpha/defspy HelloSpy Hello)
+
+(deftest basic-test
+  (let [pspy (map->HelloSpy {:hello (spy/stub :helloworld)})]
+    (is (satisfies? Hello pspy))
+    (hello pspy)
+    (spy/called-with? (:hello pspy) pspy)))
+
 (defprotocol HelloTwo
   (hello-one [this a])
   (hello-two [this b]))
 
+(spy-alpha/defspy HelloTwoSpy HelloTwo)
+
+(deftest hello-two-test
+  (let [pspy (map->HelloTwoSpy {:hello-one (spy/stub :h1)
+                                :hello-two (spy/stub :h2)})]
+    (is (satisfies? HelloTwo pspy))
+
+    (hello-one pspy :foo)
+    (is (spy/called-once-with? (:hello-one pspy) pspy :foo))
+
+    (hello-two pspy :bar)
+    (is (spy/called-once-with? (:hello-two pspy) pspy :bar))))
+
 (defprotocol HelloMulti
   (hello-multi [this] [this a]))
+
+(spy-alpha/defspy HelloMultiSpy HelloMulti)
+
+(deftest hello-multi-test
+  (let [pspy (->HelloMultiSpy (spy/stub :hello-world))]
+    (is (satisfies? HelloMulti pspy))
+    (hello-multi pspy)
+    (hello-multi pspy :foo)
+    (spy/called-with? (:hello-multi pspy) pspy)
+    (spy/called-with? (:hello-multi pspy) pspy :foo)))
 
 (defprotocol HelloMulti2
   (hello-multi2 [this] [this a])
   (something-else [this x]))
 
-(deftest basic-test
-  (let [hello-spy (spy/stub :helloworld)
-        proto-spy (spy-alpha/protocol-spy Hello {:hello hello-spy})]
-    (is (satisfies? Hello proto-spy))
-    (is (= [:hello] (keys (meta proto-spy))))
-    (hello proto-spy)
-    (spy/called-with? hello-spy proto-spy)))
-
-(deftest hello-two-test
-  (let [first-spy (spy/stub :h1)
-        second-spy (spy/stub :h2)
-        proto-spy (spy-alpha/protocol-spy HelloTwo {:hello-one first-spy
-                                                    :hello-two second-spy})]
-    (is (satisfies? HelloTwo proto-spy))
-    (is (= [:hello-one :hello-two] (keys (meta proto-spy))))
-
-    (hello-one proto-spy :foo)
-    (is (spy/called-once-with? first-spy proto-spy :foo))
-
-    (hello-two proto-spy :bar)
-    (is (spy/called-once-with? second-spy proto-spy :bar))))
-
-(deftest hello-multi-test
-  (let [hello-spy (spy/stub :helloworld)
-        proto-spy (spy-alpha/protocol-spy HelloMulti {:hello-multi hello-spy})]
-    (is (satisfies? HelloMulti proto-spy))
-    (is (= [:hello-multi] (keys (meta proto-spy))))
-    (hello-multi proto-spy)
-    (hello-multi proto-spy :foo)
-    (spy/called-with? hello-spy proto-spy)
-    (spy/called-with? hello-spy proto-spy :foo)))
+(spy-alpha/defspy HelloMulti2Spy HelloMulti2)
 
 (deftest hello-multi2-test
-  (let [hello-spy (spy/stub :helloworld)
-        se-spy (spy/stub :something-else)
-        proto-spy (spy-alpha/protocol-spy HelloMulti2 {:hello-multi2 hello-spy
-                                                       :something-else se-spy})]
-    (is (satisfies? HelloMulti2 proto-spy))
-    (is (= [:hello-multi2 :something-else] (keys (meta proto-spy))))
-    (hello-multi2 proto-spy)
-    (hello-multi2 proto-spy :foo)
-    (something-else proto-spy :bingo)
-    (spy/called-with? hello-spy proto-spy)
-    (spy/called-with? hello-spy proto-spy :foo)
-    (spy/called-with? se-spy proto-spy :bingo)))
+  (let [pspy (->HelloMulti2Spy (spy/stub :helloworld) (spy/stub :something-else))]
+    (is (satisfies? HelloMulti2 pspy))
+    (hello-multi2 pspy)
+    (hello-multi2 pspy :foo)
+    (something-else pspy :bingo)
+    (spy/called-with? (:hello-multi2 pspy) pspy)
+    (spy/called-with? (:hello-multi2 pspy) pspy :foo)
+    (spy/called-with? (:something-else pspy) pspy :bingo)))
