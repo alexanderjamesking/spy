@@ -59,3 +59,22 @@
     (spy/called-with? (:hello-multi2 pspy) pspy)
     (spy/called-with? (:hello-multi2 pspy) pspy :foo)
     (spy/called-with? (:something-else pspy) pspy :bingo)))
+
+(defprotocol BasicProtocol
+  (basic-protocol [this]))
+
+(deftest basic-protocol-test
+  (let [pspy (spy-alpha/protocol-spy BasicProtocol)]
+    (is (satisfies? BasicProtocol pspy))
+    (is (false? (spy/called-once? (:basic-protocol pspy))))
+
+    (testing "defaults to an empty spy (that returns nil when called)"
+      (is (nil? (basic-protocol pspy))))
+
+    (is (spy/called-once? (:basic-protocol pspy)))))
+
+(deftest protocol-with-custom-spy-test
+  (let [pspy (spy-alpha/protocol-spy BasicProtocol {:basic-protocol (spy/stub 99)})]
+    (is (satisfies? BasicProtocol pspy))
+    (is (= 99 (basic-protocol pspy)))
+    (is (spy/called-once? (:basic-protocol pspy)))))
