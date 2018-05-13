@@ -1,12 +1,12 @@
 (ns spy.protocols-test
   (:require [clojure.test :refer [deftest is testing]]
             [spy.core :as spy]
-            [spy.alpha :as spy-alpha]))
+            [spy.protocol :as protocol]))
 
 (defprotocol Hello
   (hello [this]))
 
-(spy-alpha/defspy HelloSpy Hello)
+(protocol/defspy HelloSpy Hello)
 
 (deftest basic-test
   (let [pspy (map->HelloSpy {:hello (spy/stub :helloworld)})]
@@ -18,7 +18,7 @@
   (hello-one [this a])
   (hello-two [this b]))
 
-(spy-alpha/defspy HelloTwoSpy HelloTwo)
+(protocol/defspy HelloTwoSpy HelloTwo)
 
 (deftest hello-two-test
   (let [pspy (map->HelloTwoSpy {:hello-one (spy/stub :h1)
@@ -34,7 +34,7 @@
 (defprotocol HelloMulti
   (hello-multi [this] [this a]))
 
-(spy-alpha/defspy HelloMultiSpy HelloMulti)
+(protocol/defspy HelloMultiSpy HelloMulti)
 
 (deftest hello-multi-test
   (let [pspy (->HelloMultiSpy (spy/stub :hello-world))]
@@ -48,7 +48,7 @@
   (hello-multi2 [this] [this a])
   (something-else [this x]))
 
-(spy-alpha/defspy HelloMulti2Spy HelloMulti2)
+(protocol/defspy HelloMulti2Spy HelloMulti2)
 
 (deftest hello-multi2-test
   (let [pspy (->HelloMulti2Spy (spy/stub :helloworld) (spy/stub :something-else))]
@@ -64,7 +64,7 @@
   (basic-protocol [this]))
 
 (deftest basic-protocol-test
-  (let [pspy (spy-alpha/protocol-spy BasicProtocol)]
+  (let [pspy (protocol/spy BasicProtocol)]
     (is (satisfies? BasicProtocol pspy))
     (is (false? (spy/called-once? (:basic-protocol pspy))))
 
@@ -74,7 +74,7 @@
     (is (spy/called-once? (:basic-protocol pspy)))))
 
 (deftest protocol-with-custom-spy-test
-  (let [pspy (spy-alpha/protocol-spy BasicProtocol {:basic-protocol (spy/stub 99)})]
+  (let [pspy (protocol/spy BasicProtocol {:basic-protocol (spy/stub 99)})]
     (is (satisfies? BasicProtocol pspy))
     (is (= 99 (basic-protocol pspy)))
     (is (spy/called-once? (:basic-protocol pspy)))))

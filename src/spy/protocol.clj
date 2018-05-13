@@ -1,7 +1,6 @@
-(ns spy.alpha
-  (:require [spy.core :as spy]))
+(ns spy.protocol)
 
-(defn pmethods
+(defn protocol-methods
   "Generate a list of method that need to be implemented for
   the protocol signatures"
   [signatures]
@@ -24,7 +23,7 @@
   "Generates a record that implements the protocol"
   [record-name protocol]
   (let [protocol-sigs (:sigs @(resolve protocol))
-        signatures (pmethods protocol-sigs)
+        signatures (protocol-methods protocol-sigs)
         fields (->> protocol-sigs keys (map (comp symbol name)))]
     `(defrecord ~record-name [~@fields]
        ~protocol
@@ -33,7 +32,7 @@
                   ((~(keyword name) ~(first args)) ~@args)))
               signatures))))
 
-(defmacro protocol-spy
+(defmacro spy
   "Generates a record implementing the protocol and creates a new instance
   of the record with the spies provided."
   [protocol & [spies]]
@@ -43,5 +42,5 @@
        (defspy ~rname ~protocol)
        (~(symbol (str 'map-> rname))
         ~(into {} (map (fn [[k v]]
-                         {k (get spies k '(spy/spy))})
+                         {k (get spies k '(spy.core/spy))})
                        signatures))))))
