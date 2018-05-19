@@ -13,8 +13,8 @@
 
 (defn called-n-times?
   [f n]
-  (is (spy/called-once? f)
-      (calls-message f 1)))
+  (is (spy/called-n-times? f n)
+      (calls-message f n)))
 
 (defn not-called?
   [f]
@@ -27,7 +27,9 @@
       (calls-message f 1)))
 
 (defn called-with?
-  [f & args])
+  [f & args]
+  (is (spy/called-with? f args)
+      (str "Spy was not called with " args ".\n\nCalls:\n" (spy/calls f))))
 
 (defn not-called-with?
   [f & args])
