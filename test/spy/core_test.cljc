@@ -1,5 +1,8 @@
 (ns spy.core-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require #?(:cljs
+               [cljs.test :as test :refer [report] :refer-macros [deftest testing is]])
+            #?(:clj
+               [clojure.test :refer [deftest testing is report]])
             [spy.core :as spy]))
 
 (deftest spy-that-returns-nil
