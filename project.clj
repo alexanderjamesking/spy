@@ -11,7 +11,8 @@
             [lein-cloverage "1.0.10"]]
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.238"]]
-  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]
+                                  [org.clojure/tools.namespace "0.2.11"]]}}
   :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target" "out"]
   :cljsbuild {:builds [{:id "test"
