@@ -170,6 +170,52 @@ If you're testing synchronous code then you can replace functions using [with-re
       (is (spy/not-called? send-message)))))
 ```
 
+### Spying on Protocols (Experimental)
+
+Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. There is also the caveat that **the protocol must be referred for this to work, it cannot be referenced from another namespace e.g. ns/Repository**. I'm open to suggestions on how to improve this and support ClojureScript, all contributions are welcome!
+
+To create a spy of a protocol you need to refer the protocol and bring in the ```spy.protocol``` namespace. The easiest implementation is to call ```(protocol/spy MyProtocol)``` which will define a record that implements every method of the protocol, and provides a basic spy for each method that returns ```nil```.
+
+```clojure
+
+(ns some-ns-with-protocol)
+
+(defprotocol BasicProtocol
+  (basic-protocol [this]))
+```
+
+```clojure
+(ns spy.protocols-test
+  (:require [spy.core :as spy]
+            [spy.protocol :as protocol]
+            [some-ns-with-protocol :refer [BasicProtocol]]
+            [clojure.test :refer [deftest is testing]]))
+
+(deftest basic-protocol-test
+  ;; defines and creates an instance of a Record that implements BasicProtocol
+  ;; each method spy `basic-protocol` in this instance, can be accessed using the keyword
+  (let [pspy (protocol/spy BasicProtocol)]
+    (is (satisfies? BasicProtocol pspy))
+
+    ;; make an assertion on the spy for the `basic-protocol` method
+    (is (false? (spy/called-once? (:basic-protocol pspy))))
+
+    ;; the default spy returns nil when called
+    (is (nil? (basic-protocol pspy)))
+
+    (is (spy/called-once? (:basic-protocol pspy)))))
+```
+
+You can provide your own spies for a protocol by passing in a map of spies with the method name as the key. You only need to provide the methods that you want to override, if the protocol has 5 methods and you only provide 1 in your map then the other 4 will be default spies that return nil.
+
+```clojure
+(deftest protocol-with-custom-spy-test
+  (let [pspy (protocol/spy BasicProtocol {:basic-protocol (spy/stub 99)})]
+    (is (satisfies? BasicProtocol pspy))
+    (is (= 99 (basic-protocol pspy)))
+    (is (spy/called-once? (:basic-protocol pspy)))))
+```
+
 ## Contributing
 
 Pull requests are welcome. Please run the test suite and check that all tests pass prior to submission.
