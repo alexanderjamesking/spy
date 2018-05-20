@@ -43,3 +43,25 @@
     (f 1 2)
     (assert-failure (partial assert/not-called-with? f 1 2)
                     "Spy was called with (1 2).\n\nCalls:\n[(1 2)]")))
+
+(deftest called-once-with-test
+  (let [f (spy/spy str)]
+    (f "hello world!")
+    (is (assert/called-once-with? f "hello world!"))
+
+    (f "foo bar")
+    (assert-failure (partial assert/called-once-with? f "foo bar")
+                    "Spy was called once with (\"foo bar\")")))
+
+(deftest called-at-least-n-times-test
+  (let [f (spy/stub 42)]
+    (assert-failure (partial assert/called-at-least-n-times? f 1)
+                    "Expected at least 1 call, received 0 calls.")
+    (f)
+    (is (assert/called-at-least-n-times? f 1))
+    (assert-failure (partial assert/called-at-least-n-times? f 33)
+                    "Expected at least 33 calls, received 1 call.")
+
+    (doall (repeatedly 42 f))
+
+    (is (assert/called-at-least-n-times? f 42))))

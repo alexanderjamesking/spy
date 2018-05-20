@@ -28,19 +28,24 @@
 
 (defn called-with?
   [f & args]
-  (is (spy/called-with? f args)
+  (is (apply spy/called-with? f args)
       (str "Spy was not called with " args ".\n\nCalls:\n" (spy/calls f))))
 
 (defn not-called-with?
   [f & args]
-  (is (false? (spy/not-called-with? f args))
+  (is (apply spy/not-called-with? f args)
       (str "Spy was called with " args ".\n\nCalls:\n" (spy/calls f))))
 
 (defn called-once-with?
-  [f & args])
+  [f & args]
+  (is (apply spy/called-once-with? f args)
+      (str "Spy was called once with " args)))
 
 (defn called-at-least-n-times?
-  [f n])
+  [f n]
+  (is (spy/called-at-least-n-times? f n)
+      (str "Expected at least " n " " (calls n) ", "
+           "received " (spy/call-count f) " " (calls (spy/call-count f)) ".")))
 
 (defn called?
   [f])
