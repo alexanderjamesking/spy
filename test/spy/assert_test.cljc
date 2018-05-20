@@ -2,9 +2,9 @@
   (:require [spy.assert :as assert]
             [spy.core :as spy]
             #?(:cljs
-               [cljs.test :as test :refer [report] :refer-macros [deftest testing is]])
+               [cljs.test :as test :refer [report testing-contexts-str] :refer-macros [deftest testing is]])
             #?(:clj
-               [clojure.test :refer [deftest testing is report]])))
+               [clojure.test :refer [deftest testing is report testing-contexts-str]])))
 
 (defn- assert-failure [assert-fn expected-message]
   (let [reporter (spy/spy)]
@@ -12,7 +12,7 @@
       (assert-fn))
 
     (let [report (first (spy/first-call reporter))]
-      (is (= :fail (:type report)))
+      (is (= :fail (:type report)) (str "Expected assertion" (testing-contexts-str) " to fail"))
       (is (= expected-message (:message report))))))
 
 (deftest not-called-test
@@ -37,3 +37,9 @@
     (f 1 2)
     (assert-failure (partial assert/called-with? f 1 2 3)
                     "Spy was not called with (1 2 3).\n\nCalls:\n[(1 2)]")))
+
+(deftest not-called-with-test
+  (let [f (spy/spy +)]
+    (f 1 2)
+    (assert-failure (partial assert/not-called-with? f 1 2)
+                    "Spy was called with (1 2).\n\nCalls:\n[(1 2)]")))

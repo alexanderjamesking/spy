@@ -32,7 +32,9 @@
       (str "Spy was not called with " args ".\n\nCalls:\n" (spy/calls f))))
 
 (defn not-called-with?
-  [f & args])
+  [f & args]
+  (is (false? (spy/not-called-with? f args))
+      (str "Spy was called with " args ".\n\nCalls:\n" (spy/calls f))))
 
 (defn called-once-with?
   [f & args])
