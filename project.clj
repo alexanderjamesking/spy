@@ -11,26 +11,28 @@
             [lein-cloverage "1.0.10"]]
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.238"]]
-  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]
+  :source-paths ["src/clj/" "src/cljc/" "src/cljs/"]
+  :profiles {:dev {:source-paths ["test/clj/" "test/cljc/"]
+                   :dependencies [[org.clojure/test.check "0.9.0"]
                                   [org.clojure/tools.namespace "0.2.11"]]}}
   :deploy-repositories [["releases" :clojars]]
-  :clean-targets ["target" "out"]
+  :clean-targets ["target"]
   :cljsbuild {:builds [{:id "test-phantom"
-                        :source-paths ["src" "test"]
+                        :source-paths ["src/cljs" "src/cljc" "src/cljsmacros" "test/cljs"]
                         :compiler {:output-to "target/test-phantom/test.js"
                                    :output-dir "target/test-phantom/out"
                                    :main 'spy.runner
                                    :optimizations :none
                                    :process-shim false}}
                        {:id "test-nashorn"
-                        :source-paths ["src" "test"]
+                        :source-paths ["src/cljs" "src/cljc" "src/cljsmacros" "test/cljs"]
                         :compiler {:output-to "target/test-nashorn/test.js"
                                    :output-dir "target/test-nashorn/out"
                                    :main 'spy.runner
                                    :optimizations :simple
                                    :process-shim false}}
                        {:id "test-node"
-                        :source-paths ["src" "test"]
+                        :source-paths ["src/cljs" "src/cljc" "src/cljsmacros" "test/cljs"]
                         :compiler {:target :nodejs
                                    :output-to "target/test-node/test.js"
                                    :output-dir "target/test-node/out"

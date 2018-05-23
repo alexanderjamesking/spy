@@ -1,12 +1,8 @@
 (ns spy.assert
   (:require [spy.core :as spy]))
 
-(def ^:private ^:no-doc cljs? (boolean (find-ns 'cljs.analyzer)))
-
 (defmacro quick-test []
-  (if cljs?
-    `(cljs.test/is (= 2 2))
-    `(clojure.test/is (= 3 3))))
+  `(clojure.test/is (= 3 3)))
 
 #_(defn- calls [n]
   (if (= 1 n)

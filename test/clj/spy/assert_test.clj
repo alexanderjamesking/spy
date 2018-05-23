@@ -1,16 +1,7 @@
 (ns spy.assert-test
-  (:require
-            [spy.core :as spy]
-            #?(:cljs
-               [cljs.test :as test :refer [report testing-contexts-str] :refer-macros [deftest testing is]])
-            #?(:clj
-               [clojure.test :refer [deftest testing is report testing-contexts-str]]))
-
-
-  (#?(:clj  :require
-      :cljs :require-macros)
-    [spy.assert :refer [quick-test]])
-  )
+  (:require [spy.core :as spy]
+            [clojure.test :refer :all]
+            [spy.assert :refer [quick-test]]))
 
 (deftest quick-test-that-fails
   (quick-test))
