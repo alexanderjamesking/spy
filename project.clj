@@ -15,9 +15,30 @@
                                   [org.clojure/tools.namespace "0.2.11"]]}}
   :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target" "out"]
-  :cljsbuild {:builds [{:id "test"
+  :cljsbuild {:builds [{:id "test-phantom"
                         :source-paths ["src" "test"]
-                        :compiler {:output-to "target/test.js"
+                        :compiler {:output-to "target/test-phantom/test.js"
+                                   :output-dir "target/test-phantom/out"
                                    :main 'spy.runner
-                                   :optimizations :whitespace}}]}
-  :aliases {"test" ["do" ["clean"] ["test"] ["doo" "nashorn" "test" "once"]]})
+                                   :optimizations :none
+                                   :process-shim false}}
+                       {:id "test-nashorn"
+                        :source-paths ["src" "test"]
+                        :compiler {:output-to "target/test-nashorn/test.js"
+                                   :output-dir "target/test-nashorn/out"
+                                   :main 'spy.runner
+                                   :optimizations :simple
+                                   :process-shim false}}
+                       {:id "test-node"
+                        :source-paths ["src" "test"]
+                        :compiler {:target :nodejs
+                                   :output-to "target/test-node/test.js"
+                                   :output-dir "target/test-node/out"
+                                   :main 'spy.runner
+                                   :optimizations :none
+                                   :process-shim false}}]}
+  :aliases {"test-phantom" ["doo" "phantom" "test-phantom" "once"]
+            "test-nashorn" ["doo" "nashorn" "test-nashorn" "once"]
+            "test-node"    ["doo" "node" "test-node" "once"]
+            "test-cljs"    ["do" ["test-phantom"] ["test-nashorn"] ["test-node"]]
+            "test-all"     ["do" ["clean"] ["test"] ["test-cljs"]]})
