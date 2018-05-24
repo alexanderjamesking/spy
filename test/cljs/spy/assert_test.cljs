@@ -34,7 +34,6 @@
     (assert-failure #(assert/called-with? f 1 2 3)
                     "Expected a call with (1 2 3)\nActual calls: [(1 2)]")))
 
-
 (deftest not-called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
