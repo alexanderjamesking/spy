@@ -9,44 +9,43 @@
       library and not the calling code."}
   spy.assert
   (:require [spy.core :as spy]
-            [spy.assert-messages :refer [calls calls-message]]
+            [spy.assert-messages :as assert-messages]
             [clojure.test :refer [is]]))
 
 (defmacro called-n-times?
   [f n]
   `(is (spy/called-n-times? ~f ~n)
-       (calls-message ~f ~n)))
+       (assert-messages/expected-calls ~f ~n)))
 
 (defmacro not-called?
   [f]
   `(is (spy/not-called? ~f)
-       (calls-message ~f 0)))
+       (assert-messages/expected-calls ~f 0)))
 
 (defmacro called-once?
   [f]
   `(is (spy/called-once? ~f)
-       (calls-message ~f 1)))
+       (assert-messages/expected-calls ~f 1)))
 
 (defmacro called-with?
   [f & args]
   `(is (spy/called-with? ~f ~@args)
-       (str "Expected a call with " '~args ".\nActual: " (spy/calls ~f))))
+       (assert-messages/called-with ~f ~@args)))
 
 (defmacro not-called-with?
   [f & args]
   `(is (spy/not-called-with? ~f ~@args)
-       (str "Expected no calls with " '~args ".\nActual: " (spy/calls ~f))))
+       (assert-messages/not-called-with ~f ~@args)))
 
 (defmacro called-once-with?
   [f & args]
   `(is (spy/called-once-with? ~f ~@args)
-      (str "Expected one call with " '~args ".\nActual: " (spy/calls ~f))))
+       (assert-messages/called-once-with ~f ~@args)))
 
 (defmacro called-at-least-n-times?
   [f n]
   `(is (spy/called-at-least-n-times? ~f ~n)
-       (str "Expected at least " ~n " " (calls ~n) ", "
-            "actual: " (spy/call-count ~f) " " (calls (spy/call-count ~f)) ".")))
+       (assert-messages/called-at-least-n-times ~f ~n)))
 
 (defmacro called?
   [f]
@@ -59,8 +58,7 @@
 (defmacro called-no-more-than-n-times?
   [f n]
   `(is (spy/called-no-more-than-n-times? ~f ~n)
-       (str "Expected no more than " ~n " " (calls ~n) ", "
-            "actual: " (spy/call-count ~f) " " (calls (spy/call-count ~f)) ".")))
+       (assert-messages/called-no-more-than-n-times ~f ~n)))
 
 (defmacro called-no-more-than-once?
   [f]

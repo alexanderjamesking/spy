@@ -11,7 +11,6 @@
       (is (= :fail (:type report)))
       (is (= expected-message (:message report))))))
 
-
 (deftest not-called-test
   (let [f (spy/spy)]
     (f)

@@ -5,16 +5,13 @@
             :url "https://opensource.org/licenses/MIT"
             :year 2018
             :key "mit"}
-  :plugins [[lein-cljsbuild "1.1.7"]
-            [lein-doo "0.1.8"]
+  :plugins [[lein-doo "0.1.8"]
             [lein-codox "0.10.3"]
             [lein-cloverage "1.0.10"]]
-  :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.10.238"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]]
   :source-paths ["src/clj" "src/cljc" "src/cljs"]
   :profiles {:dev {:test-paths ["test/clj" "test/cljc"]
-                   :dependencies [[org.clojure/test.check "0.9.0"]
-                                  [org.clojure/tools.namespace "0.2.11"]]}}
+                   :dependencies [[org.clojure/clojurescript "1.10.238"]]}}
   :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target"]
   :cljsbuild {:builds [{:id "test-phantom"
@@ -43,4 +40,5 @@
             "test-nashorn" ["doo" "nashorn" "test-nashorn" "once"]
             "test-node"    ["doo" "node" "test-node" "once"]
             "test-cljs"    ["do" ["test-phantom"] ["test-nashorn"] ["test-node"]]
+            "test-quick"   ["do" ["clean"] ["test"] ["test-node"]]
             "test-all"     ["do" ["clean"] ["test"] ["test-cljs"]]})
