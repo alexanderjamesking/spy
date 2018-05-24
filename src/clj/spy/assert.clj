@@ -2,7 +2,7 @@
   (:require [spy.core :as spy]
             [clojure.test :refer [is]]))
 
-(defn- calls [n]
+(defn calls [n]
   (if (= 1 n)
     "call"
     "calls"))
@@ -29,32 +29,38 @@
 (defmacro called-with?
   [f & args]
   `(is (spy/called-with? ~f ~@args)
-       (str "Spy should be called with " '~args ".\n\nCalls:\n" (spy/calls ~f))))
+       (str "Expected a call with " '~args ".\n\nCalls:\n" (spy/calls ~f))))
 
 (defmacro not-called-with?
   [f & args]
   `(is (spy/not-called-with? ~f ~@args)
-       (str "Spy should not be called with " '~args ".\n\nCalls:\n" (spy/calls ~f))))
+       (str "Expected no calls with " '~args ".\n\nCalls:\n" (spy/calls ~f))))
 
-(defn called-once-with?
+(defmacro called-once-with?
   [f & args]
-  (is (apply spy/called-once-with? f args)
-      (str "Spy was called once with " args)))
+  `(is (spy/called-once-with? ~f ~@args)
+      (str "Expected one call with " '~args ".\n\nCalls:\n" (spy/calls ~f))))
 
-(defn called-at-least-n-times?
+(defmacro called-at-least-n-times?
   [f n]
-  (is (spy/called-at-least-n-times? f n)
-      (str "Expected at least " n " " (calls n) ", "
-           "received " (spy/call-count f) " " (calls (spy/call-count f)) ".")))
+  `(is (spy/called-at-least-n-times? ~f ~n)
+       (str "Expected at least " ~n " " (calls ~n) ", "
+            "received " (spy/call-count ~f) " " (calls (spy/call-count ~f)) ".")))
 
-(defn called?
-  [f])
+(defmacro called?
+  [f]
+  `(called-at-least-n-times? ~f 1))
 
-(defn called-at-least-once?
-  [f])
+(defmacro called-at-least-once?
+  [f]
+  `(called-at-least-n-times? ~f 1))
 
-(defn called-no-more-than-n-times?
-  [f n])
+(defmacro called-no-more-than-n-times?
+  [f n]
+  `(is (spy/called-no-more-than-n-times? ~f ~n)
+       (str "Expected no more than " ~n " " (calls ~n) ", "
+            "received " (spy/call-count ~f) " " (calls (spy/call-count ~f)) ".")))
 
-(defn called-no-more-than-once?
-  [f])
+(defmacro called-no-more-than-once?
+  [f]
+  `(called-no-more-than-n-times? ~f 1))
