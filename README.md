@@ -20,45 +20,68 @@ It records calls and responses to and from a function, allowing you to verify in
 
 ## Usage
 
-### REPL
+### REPL (Clojure)
 
 ```clojure
-(require '[spy.core :as spy])
+(require '[spy.core :as spy]       ;; the core library with functions returning booleans
+         '[spy.assert :as assert]
+         '[clojure.test :refer [testing is]]) ;; assertions wrapping clojure.test/is
 
-(defn adder [x y]
-  (+ x y))
+(defn adder [x y] (+ x y))
 
 (def spy-adder (spy/spy adder))
 
-(spy/calls spy-adder)
-;; []
+(is (= [] (spy/calls spy-adder)))
+(is (= [] (spy/responses spy-adder)))
 
-(spy/responses spy-adder)
-;; []
+(is (true? (spy/not-called? spy-adder))) ;; spy.core/not-called? returns a boolean
 
-(spy-adder 1 2)
-;; 3
+(assert/not-called? spy-adder) ;; spy.assert/not-called? returns a boolean, but also wraps clojure.test/is so failures are reported
+
+(testing "Let's see what a failure looks like..."
+  (assert/called? spy-adder))
+
+;; FAIL in () (form-init4641634702245604141.clj:37)
+;; Let's see what a failure looks like...
+;; Expected at least 1 call
+;; Actual: 0 calls.
+;; expected: (spy.core/called-at-least-n-times? spy-adder 1)
+;;   actual: (not (spy.core/called-at-least-n-times? #function[clojure.lang.AFunction/1] 1))
+;; false
+
+(testing "calling the function"
+  (is (= 3 (spy-adder 1 2))))
 
 ;; the calls and responses are stored on the spy
 (meta spy-adder)
 ;; {:calls #atom[[(1 2)] 0x7612740d], :responses #atom[[3] 0x26525904]}
 
-;; they can be accessed via spy/calls
-(spy/calls spy-adder)
-;; [(1 2)]
+(testing "calls to the spy can be accessed via spy/calls"
+  (is (= [[1 2]] (spy/calls spy-adder))))
 
-;; and spy/responses
-(spy/responses spy-adder)
-;; [3]
+(testing "responses from the spy can be accessed via spy/responses"
+  (is (= [3] (spy/responses spy-adder))))
 
-(spy-adder 40 2)
-;; 42
+(testing "let's do another call"
+  (is (= 42 (spy-adder 40 2))))
 
-(spy/calls spy-adder)
-;; [(1 2) (40 2)]
+(testing "all calls and responses are stored on the spy"
+  (is (= [[1 2] [40 2]] (spy/calls spy-adder)))
+  (is (= [3 42] (spy/responses spy-adder))))
 
-(spy/responses spy-adder)
-;; [3 42]
+(testing "check if the spy was called with some arguments"
+  (is (true? (spy/called-with? spy-adder 1 2)))
+  (is (false? (spy/called-with? spy-adder 1 59))))
+
+(testing "assert gives us better error messages when our assertions don't hold true"
+        (assert/called-with? spy-adder 66 99))
+;; FAIL in () (form-init15061478131364358.clj:197)
+;; assert gives us better error messages when our assertions don't hold true
+;; Expected a call with (66 99)
+;; Actual calls: [(1 2) (40 2)]
+;; expected: (spy.core/called-with? spy-adder 66 99)
+;;   actual: (not (spy.core/called-with? #function[clojure.lang.AFunction/1] 66 99))
+;;false
 ```
 
 ### Spies
