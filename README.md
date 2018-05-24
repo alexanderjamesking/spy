@@ -73,7 +73,7 @@ It records calls and responses to and from a function, allowing you to verify in
   (is (false? (spy/called-with? spy-adder 1 59))))
 
 (testing "assert gives us better error messages when our assertions don't hold true"
-        (assert/called-with? spy-adder 66 99))
+  (assert/called-with? spy-adder 66 99))
 ;; FAIL in () (form-init15061478131364358.clj:197)
 ;; assert gives us better error messages when our assertions don't hold true
 ;; Expected a call with (66 99)
