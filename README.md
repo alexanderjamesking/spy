@@ -24,8 +24,8 @@ It records calls and responses to and from a function, allowing you to verify in
 
 ```clojure
 (require '[spy.core :as spy]       ;; the core library with functions returning booleans
-         '[spy.assert :as assert]
-         '[clojure.test :refer [testing is]]) ;; assertions wrapping clojure.test/is
+         '[spy.assert :as assert]  ;; assertions wrapping clojure.test/is
+         '[clojure.test :refer [testing is]])
 
 (defn adder [x y] (+ x y))
 
@@ -40,7 +40,6 @@ It records calls and responses to and from a function, allowing you to verify in
 
 (testing "Let's see what a failure looks like..."
   (assert/called? spy-adder))
-
 ;; FAIL in () (form-init4641634702245604141.clj:37)
 ;; Let's see what a failure looks like...
 ;; Expected at least 1 call
