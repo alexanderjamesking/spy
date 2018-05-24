@@ -49,21 +49,15 @@ It records calls and responses to and from a function, allowing you to verify in
 ;;   actual: (not (spy.core/called-at-least-n-times? #function[clojure.lang.AFunction/1] 1))
 ;; false
 
-
 (testing "calling the function"
   (is (= 3 (spy-adder 1 2))))
 
 (testing "calls and responses are stored on the spy"
-
   (meta spy-adder) ;; {:calls     #atom[[(1 2)] 0x7612740d],
                    ;;  :responses #atom[[3] 0x26525904]}
-
   (let [{:keys [calls responses]} (meta spy-adder)]
     (is (= [[1 2] [40 2]] @calls))
     (is (= [3 42] @responses))))
-
-;; the calls and responses are stored on the spy
-(meta spy-adder);; {:calls #atom[[(1 2)] 0x7612740d], :responses #atom[[3] 0x26525904]}
 
 (testing "calls to the spy can be accessed via spy/calls"
   (is (= [[1 2]] (spy/calls spy-adder))))
