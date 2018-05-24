@@ -40,7 +40,7 @@ It records calls and responses to and from a function, allowing you to verify in
 
 (testing "Let's see what a failure looks like..."
   (assert/called? spy-adder))
-;;
+
 ;; FAIL in () (form-init4641634702245604141.clj:37)
 ;; Let's see what a failure looks like...
 ;; Expected at least 1 call
@@ -48,6 +48,7 @@ It records calls and responses to and from a function, allowing you to verify in
 ;; expected: (spy.core/called-at-least-n-times? spy-adder 1)
 ;;   actual: (not (spy.core/called-at-least-n-times? #function[clojure.lang.AFunction/1] 1))
 ;; false
+
 
 (testing "calling the function"
   (is (= 3 (spy-adder 1 2))))
@@ -78,7 +79,7 @@ It records calls and responses to and from a function, allowing you to verify in
 
 (testing "assert gives us better error messages when our assertions don't hold true"
   (assert/called-with? spy-adder 66 99))
-;;
+
 ;; FAIL in () (form-init15061478131364358.clj:197)
 ;; assert gives us better error messages when our assertions don't hold true
 ;; Expected a call with (66 99)
@@ -86,6 +87,7 @@ It records calls and responses to and from a function, allowing you to verify in
 ;; expected: (spy.core/called-with? spy-adder 66 99)
 ;;   actual: (not (spy.core/called-with? #function[clojure.lang.AFunction/1] 66 99))
 ;;false
+
 ```
 
 ### Spies
