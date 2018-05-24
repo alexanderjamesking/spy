@@ -1,7 +1,8 @@
 (ns spy.assert-test
   (:require [spy.core :as spy]
             [clojure.test :refer [deftest testing is testing-contexts-str report]]
-            [spy.assert :as assert]))
+            [spy.assert :as assert]
+            [spy.assert-messages :as assert-messages]))
 
 (defmacro assert-failure [assert-fn expected-message]
   `(let [reporter# (spy/spy)]
@@ -15,30 +16,31 @@
   (let [f (spy/spy)]
     (f)
     (assert-failure (assert/not-called? f)
-                    "Expected 0 calls, actual: 1 call.")))
+                    (assert-messages/expected-calls f 0))))
 
 (deftest called-once-test
   (let [f (spy/spy)]
     (f)
     (f)
     (assert-failure (assert/called-once? f)
-                    "Expected 1 call, actual: 2 calls.")))
+                    (assert-messages/expected-calls f 1))))
 
 (deftest called-n-times-test
-  (assert-failure (assert/called-n-times? (spy/spy) 5)
-                  "Expected 5 calls, actual: 0 calls."))
+  (let [f (spy/spy)]
+    (assert-failure (assert/called-n-times? f 5)
+                    (assert-messages/expected-calls f 5))))
 
 (deftest called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
     (assert-failure (assert/called-with? f 1 2 3)
-                    "Expected a call with (1 2 3)\nActual calls: [(1 2)]")))
+                    (assert-messages/called-with f 1 2 3))))
 
 (deftest not-called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
     (assert-failure (assert/not-called-with? f 1 2)
-                    "Expected no calls with (1 2)\nActual calls: [(1 2)]")))
+                    (assert-messages/not-called-with f 1 2))))
 
 (deftest called-once-with-test
   (let [f (spy/spy str)]
@@ -47,16 +49,16 @@
 
     (f "foo bar")
     (assert-failure (assert/called-once-with? f "foo bar")
-                    "Expected one call with (\"foo bar\")\nActual calls: [(\"hello world!\") (\"foo bar\")]")))
+                    (assert-messages/called-once-with f "foo bar"))))
 
 (deftest called-at-least-n-times-test
   (let [f (spy/stub 42)]
     (assert-failure (assert/called-at-least-n-times? f 1)
-                    "Expected at least 1 call, actual: 0 calls.")
+                    (assert-messages/called-at-least-n-times f 1))
     (f)
     (is (assert/called-at-least-n-times? f 1))
     (assert-failure (assert/called-at-least-n-times? f 33)
-                    "Expected at least 33 calls, actual: 1 call.")
+                    (assert-messages/called-at-least-n-times f 33))
 
     (doall (repeatedly 42 f))
 
@@ -65,14 +67,14 @@
 (deftest called-test
   (let [f (spy/stub 42)]
     (assert-failure (assert/called? f)
-                    "Expected at least 1 call, actual: 0 calls.")
+                    (assert-messages/called-at-least-n-times f 1))
     (f)
     (is (assert/called? f))))
 
 (deftest called-at-least-once-test
   (let [f (spy/stub 42)]
     (assert-failure (assert/called-at-least-once? f)
-                    "Expected at least 1 call, actual: 0 calls.")
+                    (assert-messages/called-at-least-n-times f 1))
     (f)
     (is (assert/called-at-least-once? f))))
 
@@ -83,7 +85,7 @@
     (f)
     (f)
     (assert-failure (assert/called-no-more-than-n-times? f 2)
-                    "Expected no more than 2 calls, actual: 3 calls.")))
+                    (assert-messages/called-no-more-than-n-times f 2))))
 
 (deftest called-no-more-than-once-test
   (let [f (spy/spy)]
@@ -92,4 +94,4 @@
     (is (assert/called-no-more-than-once? f))
     (f)
     (assert-failure (assert/called-no-more-than-once? f)
-                    "Expected no more than 1 call, actual: 2 calls.")))
+                    (assert-messages/called-no-more-than-n-times f 1))))
