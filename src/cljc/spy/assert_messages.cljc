@@ -15,13 +15,13 @@
        "actual: " (spy/call-count f) " " (calls (spy/call-count f)) "."))
 
 (defn called-with [f & args]
-  (str "Expected a call with " args ".\nActual calls: " (spy/calls f)))
+  (str "Expected a call with " args "\nActual calls: " (spy/calls f)))
 
 (defn not-called-with [f & args]
-  (str "Expected no calls with " args ".\nActual calls: " (spy/calls f)))
+  (str "Expected no calls with " args "\nActual calls: " (spy/calls f)))
 
 (defn called-once-with [f & args]
-  (str "Expected one call with " args ".\nActual calls: " (spy/calls f)))
+  (str "Expected one call with " args "\nActual calls: " (spy/calls f)))
 
 (defn called-at-least-n-times [f n]
   (str "Expected at least " n " " (calls n) ", "

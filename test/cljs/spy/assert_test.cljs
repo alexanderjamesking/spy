@@ -32,14 +32,14 @@
   (let [f (spy/spy +)]
     (f 1 2)
     (assert-failure #(assert/called-with? f 1 2 3)
-                    "Expected a call with (1 2 3).\nActual calls: [(1 2)]")))
+                    "Expected a call with (1 2 3)\nActual calls: [(1 2)]")))
 
 
 (deftest not-called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
     (assert-failure #(assert/not-called-with? f 1 2)
-                    "Expected no calls with (1 2).\nActual calls: [(1 2)]")))
+                    "Expected no calls with (1 2)\nActual calls: [(1 2)]")))
 
 (deftest called-once-with-test
   (let [f (spy/spy str)]
@@ -48,7 +48,7 @@
 
     (f "foo bar")
     (assert-failure #(assert/called-once-with? f "foo bar")
-                    "Expected one call with (\"foo bar\").\nActual calls: [(\"hello world!\") (\"foo bar\")]")))
+                    "Expected one call with (\"foo bar\")\nActual calls: [(\"hello world!\") (\"foo bar\")]")))
 
 (deftest called-at-least-n-times-test
   (let [f (spy/stub 42)]
