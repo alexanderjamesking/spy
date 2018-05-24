@@ -1,5 +1,7 @@
 (ns ^{:author "Alexander James King",
-      :doc "clojure.test assertion functions wrapping spy.core
+      :doc "Assertion functions wrapping spy.core functions,
+      providing assertions using clojure.test/is and messages
+      to aid debugging when test expectations are not met.
 
       Macros are used to ensure the clojure.test/is macro
       appears in the calling code, otherwise line numbers
@@ -23,7 +25,6 @@
        "actual: " (spy/call-count f) " " (calls (spy/call-count f)) "."))
 
 (defmacro called-n-times?
-  "Throws "
   [f n]
   `(is (spy/called-n-times? ~f ~n)
        (calls-message ~f ~n)))
