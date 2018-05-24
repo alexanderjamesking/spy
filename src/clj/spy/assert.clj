@@ -9,20 +9,8 @@
       library and not the calling code."}
   spy.assert
   (:require [spy.core :as spy]
+            [spy.assert-messages :refer [calls calls-message]]
             [clojure.test :refer [is]]))
-
-(defn calls
-  "Returns call if n is one, otherwise returns calls."
-  [n]
-  (if (= 1 n)
-    "call"
-    "calls"))
-
-(defn calls-message
-  "Returns message with expected and actual call counts.'"
-  [f expected-count]
-  (str "Expected " expected-count " " (calls expected-count) ", "
-       "actual: " (spy/call-count f) " " (calls (spy/call-count f)) "."))
 
 (defmacro called-n-times?
   [f n]
