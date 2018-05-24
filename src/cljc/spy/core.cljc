@@ -1,4 +1,7 @@
-(ns spy.core)
+(ns ^{:author "Alexander James King",
+      :doc "A testing framework for stubs, spies and mocks.
+      Enables verification of interactions with a function."}
+    spy.core)
 
 (defn spy
   "If no function is supplied, returns a function that takes any number of args

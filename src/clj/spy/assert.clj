@@ -1,4 +1,11 @@
-(ns spy.assert
+(ns ^{:author "Alexander James King",
+      :doc "clojure.test assertion functions wrapping spy.core
+
+      Macros are used to ensure the clojure.test/is macro
+      appears in the calling code, otherwise line numbers
+      reported on failure will show as failures in the
+      library and not the calling code."}
+  spy.assert
   (:require [spy.core :as spy]
             [clojure.test :refer [is]]))
 

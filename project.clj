@@ -12,7 +12,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.238"]]
   :source-paths ["src/clj" "src/cljc" "src/cljs"]
-  :profiles {:dev {:source-paths ["test/clj" "test/cljc"]
+  :profiles {:dev {:test-paths ["test/clj" "test/cljc"]
                    :dependencies [[org.clojure/test.check "0.9.0"]
                                   [org.clojure/tools.namespace "0.2.11"]]}}
   :deploy-repositories [["releases" :clojars]]
