@@ -1,6 +1,6 @@
 (ns spy.assert-test
   (:require [spy.core :as spy]
-            [clojure.test :refer :all]
+            [clojure.test :refer [deftest testing is testing-contexts-str report]]
             [spy.assert :as assert]))
 
 (defn- assert-failure [assert-fn expected-message]
@@ -15,31 +15,31 @@
 (deftest not-called-test
   (let [f (spy/spy)]
     (f)
-    (assert-failure (partial assert/not-called? f)
+    (assert-failure #(assert/not-called? f)
                     "Expected 0 calls, received 1 call.")))
 
 (deftest called-once-test
   (let [f (spy/spy)]
     (f)
     (f)
-    (assert-failure (partial assert/called-once? f)
+    (assert-failure #(assert/called-once? f)
                     "Expected 1 call, received 2 calls.")))
 
 (deftest called-n-times-test
-  (assert-failure (partial assert/called-n-times? (spy/spy) 5)
+  (assert-failure #(assert/called-n-times? (spy/spy) 5)
                   "Expected 5 calls, received 0 calls."))
 
 (deftest called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
-    (assert-failure (partial assert/called-with? f 1 2 3)
-                    "Spy was not called with (1 2 3).\n\nCalls:\n[(1 2)]")))
+    (assert-failure #(assert/called-with? f 1 2 3)
+                    "Spy should be called with (1 2 3).\n\nCalls:\n[(1 2)]")))
 
 (deftest not-called-with-test
   (let [f (spy/spy +)]
     (f 1 2)
-    (assert-failure (partial assert/not-called-with? f 1 2)
-                    "Spy was called with (1 2).\n\nCalls:\n[(1 2)]")))
+    (assert-failure #(assert/not-called-with? f 1 2)
+                    "Spy should not be called with (1 2).\n\nCalls:\n[(1 2)]")))
 
 (deftest called-once-with-test
   (let [f (spy/spy str)]
