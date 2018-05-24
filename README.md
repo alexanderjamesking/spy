@@ -96,7 +96,6 @@ It records calls and responses to and from a function, allowing you to verify in
 ```spy.core/spy``` wraps a function and records calls to the function and responses returned by the function, this is done using an [atom](https://clojuredocs.org/clojure.core/atom). Calls and responses are stored on the function itself using [metadata](https://clojure.org/reference/metadata).
 
 ```clojure
-
 (defn my-adder [x y]
   (+ x y))
 
@@ -112,7 +111,6 @@ It records calls and responses to and from a function, allowing you to verify in
 A stub is a spy that wraps [constantly](https://clojuredocs.org/clojure.core/constantly), providing us with a function that returns a value and giving us the ability to verify calls were made to the stub.
 
 ```clojure
-
 (let [f (spy/stub 42)] ;; create a stub that returns a hardcoded value
       (is (spy/not-called? f)) ;; verify the stub has not been called yet
       (f) ;; call the stub
@@ -141,7 +139,6 @@ To implement a mock you just need to implement a function that has the same cont
 If you spy on a function that throws an exception then Spy will catch your exception, record it in the responses, then re-throw the original exception, thus enabling you to test that the exception was thrown. A ```stub-throws``` helper function is provided.
 
 #### Clojure
-
 ```clojure
 (let [f (spy/stub-throws (Exception. "Goodbye World!"))]
       (is (thrown? Exception (f)))
@@ -151,7 +148,6 @@ If you spy on a function that throws an exception then Spy will catch your excep
 ```
 
 #### ClojureScript
-
 ```clojure
 (let [f (spy/stub-throws (js/Error "Goodbye World!"))]
       (is (thrown? js/Object (f)))
