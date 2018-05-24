@@ -15,7 +15,7 @@ It records calls and responses to and from a function, allowing you to verify in
 
 ## Documentation
 
-* [API Docs](http://alexanderjamesking.github.com/tortue/spy/1.1.0/)
+* [API Docs](http://alexanderjamesking.github.com/tortue/spy/1.2.0/)
 * [Introducing Spy - a Clojure / ClojureScript library for Spies, Stubs and Mocks](http://alexanderjamesking.com/posts/clojure-spies-stubs-mocks)
 
 ## Usage
