@@ -62,7 +62,6 @@ It records calls and responses to and from a function, allowing you to verify in
 (testing "let's do another call"
   (is (= 42 (spy-adder 40 2))))
 
-
 (testing "calls and responses are stored on the spy using metadata"
   (meta spy-adder) ;; {:calls     #atom[[(1 2)] 0x7612740d],
                    ;;  :responses #atom[[3] 0x26525904]}
@@ -70,15 +69,15 @@ It records calls and responses to and from a function, allowing you to verify in
     (is (= [[1 2] [40 2]] @calls))
     (is (= [3 42] @responses))))
 
-(testing "they can be access via spy/calls and spy/responses"
+(testing "but they can be access via spy/calls and spy/responses"
   (is (= [[1 2] [40 2]] (spy/calls spy-adder)))
   (is (= [3 42] (spy/responses spy-adder))))
 
-(testing "check if the spy was called with some arguments"
+(testing "we can check if the spy was called with some arguments"
   (is (true? (spy/called-with? spy-adder 1 2)))
   (is (false? (spy/called-with? spy-adder 1 59))))
 
-(testing "assert gives us better error messages when our assertions don't hold true"
+(testing "but spy.assert gives us better error messages when our assertions don't hold true"
   (assert/called-with? spy-adder 66 99))
 
 ;; FAIL in () (form-init15061478131364358.clj:197)
