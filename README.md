@@ -53,13 +53,6 @@ It records calls and responses to and from a function, allowing you to verify in
 (testing "calling the function"
   (is (= 3 (spy-adder 1 2))))
 
-(testing "calls and responses are stored on the spy"
-  (meta spy-adder) ;; {:calls     #atom[[(1 2)] 0x7612740d],
-                   ;;  :responses #atom[[3] 0x26525904]}
-  (let [{:keys [calls responses]} (meta spy-adder)]
-    (is (= [[1 2] [40 2]] @calls))
-    (is (= [3 42] @responses))))
-
 (testing "calls to the spy can be accessed via spy/calls"
   (is (= [[1 2]] (spy/calls spy-adder))))
 
@@ -69,7 +62,15 @@ It records calls and responses to and from a function, allowing you to verify in
 (testing "let's do another call"
   (is (= 42 (spy-adder 40 2))))
 
-(testing "all calls and responses are stored on the spy"
+
+(testing "calls and responses are stored on the spy using metadata"
+  (meta spy-adder) ;; {:calls     #atom[[(1 2)] 0x7612740d],
+                   ;;  :responses #atom[[3] 0x26525904]}
+  (let [{:keys [calls responses]} (meta spy-adder)]
+    (is (= [[1 2] [40 2]] @calls))
+    (is (= [3 42] @responses))))
+
+(testing "they can be access via spy/calls and spy/responses"
   (is (= [[1 2] [40 2]] (spy/calls spy-adder)))
   (is (= [3 42] (spy/responses spy-adder))))
 
