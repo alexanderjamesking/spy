@@ -197,7 +197,7 @@ If you're testing synchronous code then you can replace functions using [with-re
 
 ### Spying on Protocols (Experimental)
 
-Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. There is also the caveat that **the protocol must be referred for this to work, it cannot be referenced from another namespace e.g. ns/Repository**. I'm open to suggestions on how to improve this and support ClojureScript, all contributions are welcome!
+Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. I'm open to suggestions on how to improve this and support ClojureScript, all contributions are welcome!
 
 To create a spy of a protocol you need to refer the protocol and bring in the ```spy.protocol``` namespace. The easiest implementation is to call ```(protocol/spy MyProtocol)``` which will define a record that implements every method of the protocol, and provides a basic spy for each method that returns ```nil```.
 
@@ -223,12 +223,12 @@ To create a spy of a protocol you need to refer the protocol and bring in the ``
     (is (satisfies? BasicProtocol pspy))
 
     ;; make an assertion on the spy for the `basic-protocol` method
-    (is (false? (spy/called-once? (:basic-protocol pspy))))
+    (is (false? (spy/called-once? (:basic-protocol (protocol/spies pspy)))))
 
     ;; the default spy returns nil when called
     (is (nil? (basic-protocol pspy)))
 
-    (is (spy/called-once? (:basic-protocol pspy)))))
+    (is (spy/called-once? (:basic-protocol (protocol/spies pspy))))))
 ```
 
 You can provide your own spies for a protocol by passing in a map of spies with the method name as the key. You only need to provide the methods that you want to override, if the protocol has 5 methods and you only provide 1 in your map then the other 4 will be default spies that return nil.
@@ -238,7 +238,7 @@ You can provide your own spies for a protocol by passing in a map of spies with 
   (let [pspy (protocol/spy BasicProtocol {:basic-protocol (spy/stub 99)})]
     (is (satisfies? BasicProtocol pspy))
     (is (= 99 (basic-protocol pspy)))
-    (is (spy/called-once? (:basic-protocol pspy)))))
+    (is (spy/called-once? (:basic-protocol (protocol/spies pspy))))))
 ```
 
 ## Contributing
