@@ -19,28 +19,24 @@
         (let [[_ to-process] (first signatures)]
           (recur (rest signatures) to-process mthds))))))
 
-(defmacro defspy
-  "Generates a record that implements the protocol"
-  [record-name protocol]
-  (let [protocol-sigs (:sigs @(resolve protocol))
-        signatures (protocol-methods protocol-sigs)
-        fields (->> protocol-sigs keys (map (comp symbol name)))]
-    `(defrecord ~record-name [~@fields]
-       ~protocol
-       ~@(map (fn [{:keys [name args]}]
-                `(~name ~args
-                  ((~(keyword name) ~(first args)) ~@args)))
-              signatures))))
-
 (defmacro spy
-  "Generates a record implementing the protocol and creates a new instance
-  of the record with the spies provided."
+  "Reify the protocol, spies attached to the reified object via metadata"
   [protocol & [spies]]
-  (let [signatures (:sigs @(resolve protocol))
-        rname (gensym protocol)]
-    `(do
-       (defspy ~rname ~protocol)
-       (~(symbol (str 'map-> rname))
-        ~(into {} (map (fn [[k v]]
-                         {k (get spies k '(spy.core/spy))})
-                       signatures))))))
+  (let [signatures (protocol-methods (:sigs @(resolve protocol)))
+        spy-fns (->> signatures
+                     (map (fn [signature]
+                                (let [n (keyword (:name signature))]
+                                  {n (get spies n '(spy.core/spy))})))
+                     (into {}))
+        spy-fns-sym (gensym "spy-fns-")]
+    `(let [~spy-fns-sym ~spy-fns]
+       (with-meta
+         (reify ~protocol
+           ~@(map (fn [{:keys [name args]}]
+                    `(~name ~args
+                      ((~(keyword name) ~spy-fns-sym) ~@args)))
+               signatures))
+         ~spy-fns-sym))))
+
+(defn spies [instance]
+  (meta instance))
