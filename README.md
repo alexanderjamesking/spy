@@ -238,7 +238,7 @@ You can provide your own spies for a protocol by passing in a map of spies with 
   (let [pspy (protocol/spy BasicProtocol {:basic-protocol (spy/stub 99)})]
     (is (satisfies? BasicProtocol pspy))
     (is (= 99 (basic-protocol pspy)))
-    (is (spy/called-once? (:basic-protocol pspy)))))
+    (is (spy/called-once? (:basic-protocol (protocol/spies pspy))))))
 ```
 
 ## Contributing
