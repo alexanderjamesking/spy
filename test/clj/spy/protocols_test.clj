@@ -4,9 +4,6 @@
             [spy.protocol :as protocol]
             [spy.my-protocol :as my-protocol]))
 
-(defprotocol Hello
-  (hello [this]))
-
 (defprotocol HelloTwo
   (hello-one [this a])
   (hello-two [this b]))
