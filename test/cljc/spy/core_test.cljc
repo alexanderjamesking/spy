@@ -3,7 +3,8 @@
                [cljs.test :as test :refer [report] :refer-macros [deftest testing is]])
             #?(:clj
                [clojure.test :refer [deftest testing is report]])
-            [spy.core :as spy]))
+            [spy.core :as spy]
+            [clojure.set :refer [subset?]]))
 
 (deftest spy-that-returns-nil
   (testing "calling spy with no arguments gives a spy that returns nil"
@@ -77,6 +78,30 @@
       (is (spy/not-called? spy))
       (is (= 8 (pf 3)))
       (is (spy/called-once? spy)))))
+
+(deftest call-matching-test
+  (testing "call matching"
+    (let [f (spy/spy (fn [x y] (+ x y)))]
+      (is (false? (spy/call-matching? f (fn [call-args]
+                                          (= 42 (first call-args))))))
+      (f 42 88)
+      (is (true? (spy/call-matching? f (fn [call-args]
+                                         (= 42 (first call-args))))))
+
+
+      (is (true? (spy/call-matching? f (fn [args]
+                                         (subset? (set [42])
+                                                              (set args))))))
+
+      (let [f2 (spy/spy)]
+        (f2 {:command "hello"
+             :some-val 42})
+        (is (true? (spy/call-matching? f2 (fn [args]
+                                            (subset? (set {:command "hello"})
+                                                     (set (first args)))))))
+        (is (true? (spy/call-matching? f2 (fn [args]
+                                            (subset? (set {:some-val 42})
+                                                     (set (first args)))))))))))
 
 (deftest called-with-test
   (testing "called with"

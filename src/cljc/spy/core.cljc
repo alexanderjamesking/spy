@@ -103,6 +103,11 @@
   [f]
   (called-n-times? f 1))
 
+(defn call-matching?
+  "Returns true if any of the calls to the spy f match the predicate"
+  [f pred]
+  (not (nil? (some pred (calls f)))))
+
 (defn called-with?
   "Returns true if any of the calls to the spy f match the args, false if no calls match."
   [f & args]
