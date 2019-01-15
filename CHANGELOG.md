@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.5.0] - 2019-01-15
+- Added `call-matching?` so users can provide their own matching `fn`.
+
 ## [1.4.0] - 2018-05-31
 - Simplified the way spies are created for Protocols, now using `reify` instead of `defrecord`. This introduces a breaking change as spies are now added to the reified object as metadata so must be extracted before assertions can happen on them, see the README or tests for an example.
 
