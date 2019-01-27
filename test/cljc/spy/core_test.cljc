@@ -113,6 +113,15 @@
       (is (false? (spy/called-with? f 4 5 6)))
       (is (spy/not-called-with? f 7 8)))))
 
+(deftest called-n-times-with-test
+  (testing "called n times with predicate"
+    (let [f (spy/spy +)]
+      (is (= 2 (f 1 1)))
+      (is (spy/called-n-times-with? f 1 #(= 1 (first %))))
+      (is (= 3 (f 1 2)))
+      (is (spy/called-n-times-with? f 2 #(= 1 (first %))))
+      (is (false? (spy/called-n-times-with? f 5 #(= 1 (first %))))))))
+
 (deftest called-once-with-test
   (let [f (spy/spy str)]
     (testing "called with exactly"

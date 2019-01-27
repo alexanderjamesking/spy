@@ -93,6 +93,11 @@
   [f n]
   (= n (call-count f)))
 
+(defn called-n-times-with?
+  "Returns true if the spy f has n calls matching the predicate, false if not."
+  [f n pred]
+  (= n (count (filter pred (calls f)))))
+
 (defn not-called?
   "Returns true if the spy f was never called, false if not."
   [f]
