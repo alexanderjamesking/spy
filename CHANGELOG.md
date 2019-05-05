@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.0] - 2019-01-27
+- Added `called-n-times-with?`
+
 ## [1.5.0] - 2019-01-15
 - Added `call-matching?` so users can provide their own matching `fn`.
 
