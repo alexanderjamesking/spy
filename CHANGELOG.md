@@ -3,6 +3,9 @@
 ## [2.0.0] - 2019-05-7
 - Rewrite of `spy.protocol/spy` to work as a spy, the previous implementation was not really a spy as it didn't proxy to a real implementation. You now need to provide a protocol and an implementation of the protocol to spy on.
 
+## [1.7.0]
+- Accidental release (actually `2.0.0`)
+
 ## [1.6.0] - 2019-01-27
 - Added `called-n-times-with?`
 
