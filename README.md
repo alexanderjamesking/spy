@@ -13,11 +13,6 @@ It records calls and responses to and from a function, allowing you to verify in
 2. Spy - wrapper around a function allowing verification of interactions with the function
 3. Mock  - function with a fake implementation to be used in place of the real thing
 
-## Documentation
-
-* [API Docs](http://alexanderjamesking.github.com/tortue/spy/1.4.0/)
-* [Introducing Spy - a Clojure / ClojureScript library for Spies, Stubs and Mocks](http://alexanderjamesking.com/posts/clojure-spies-stubs-mocks)
-
 ## Usage
 
 ### REPL (Clojure)
@@ -156,7 +151,7 @@ If you spy on a function that throws an exception then Spy will catch your excep
 
 ### Using with-redefs to replace functions with spies
 
-If you're testing synchronous code then you can replace functions using [with-redefs](https://clojuredocs.org/clojure.core/with-redefs), if you're testing async code then it's safer to pass the functions in using dependency injection. If you want to see more examples of this checkout this excellent blog post about [TDD in Clojure](https://engineering.fundingcircle.com/blog/2016/01/11/tdd-in-clojure/).
+If you are testing synchronous code then you can replace functions using [with-redefs](https://clojuredocs.org/clojure.core/with-redefs), if you're testing async code then it's safer to pass the functions in using dependency injection. If you want to see more examples of this checkout this excellent blog post about [TDD in Clojure](https://engineering.fundingcircle.com/blog/2016/01/11/tdd-in-clojure/).
 
 ```clojure
 (ns spy-example.core-test
