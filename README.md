@@ -112,7 +112,7 @@ A stub is a spy that wraps [constantly](https://clojuredocs.org/clojure.core/con
       (is (spy/called-once? f))
       (f) ;; call it for a second time
       (f) ;; call if for a third time
-      (is (spy/called-n? 3 f))) ;; verify it was called 3 times
+      (is (spy/called-n-times? f 3))) ;; verify it was called 3 times
 ```
 
 ### Mocks  (also known as Fakes / Test Doubles)
