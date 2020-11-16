@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.2.0] - 2020-11-16
+- Rich assertions for Clojure and ClojureScript, you can now require `spy.test` to register spy functions with `clojure.test/assert-expr` resulting in better error messages. This can be used instead of `spy.assert` which will likely be deprecated in the longer term in favour of `assert-expr`.
+
 ## [2.0.0] - 2019-05-7
 - Rewrite of `spy.protocol/spy` to work as a spy, the previous implementation was not really a spy as it didn't proxy to a real implementation. You now need to provide a protocol and an implementation of the protocol to spy on.
 
