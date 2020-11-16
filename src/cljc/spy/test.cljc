@@ -41,19 +41,19 @@
 
      (defmacro assert-called-n
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-n spy/call-count))
+       `(assert-called ~msg ~form ~report-fn called-n spy.core/call-count))
 
      (defmacro assert-called-once
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-once spy/call-count))
+       `(assert-called ~msg ~form ~report-fn called-once spy.core/call-count))
 
      (defmacro assert-called-args
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-args spy/calls))
+       `(assert-called ~msg ~form ~report-fn called-args spy.core/calls))
 
      (defmacro assert-not-called
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn not-called spy/call-count))
+       `(assert-called ~msg ~form ~report-fn not-called spy.core/call-count))
 
      (defmethod t/assert-expr 'spy/called-n-times?
        [msg form]
