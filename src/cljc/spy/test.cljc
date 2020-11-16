@@ -17,7 +17,8 @@
   ;;   actual: [(\"foo\" \"bar\")]
   (is (spy/called-with? f \"baz\"))"
   #?(:cljs (:require-macros [spy.test.cljs])
-     :clj  (:require [clojure.test :as t])))
+     :clj  (:require [clojure.test :as t]))
+  (:require [spy.core]))
 
 (defn called-n [n] n)
 (defn called-once [] 1)
