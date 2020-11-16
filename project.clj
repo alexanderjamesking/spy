@@ -1,4 +1,4 @@
-(defproject tortue/spy "2.1.0"
+(defproject tortue/spy "2.2.0-SNAPSHOT"
   :description "Spy - a Clojure and ClojureScript library for stubs, spies and mocks"
   :url "https://github.com/alexanderjamesking/spy"
   :license {:name "MIT License"
