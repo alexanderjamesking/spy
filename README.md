@@ -20,6 +20,7 @@ It records calls and responses to and from a function, allowing you to verify in
 ```clojure
 (require '[spy.core :as spy]       ;; the core library with functions returning booleans
          '[spy.assert :as assert]  ;; assertions wrapping clojure.test/is
+         '[spy.test]               ;; assert-expr definitions for clojure.test
          '[clojure.test :refer [testing is]])
 
 (defn adder [x y] (+ x y))
@@ -74,6 +75,10 @@ It records calls and responses to and from a function, allowing you to verify in
 
 (testing "but spy.assert gives us better error messages when our assertions don't hold true"
   (assert/called-with? spy-adder 66 99))
+
+(testing "spy defines assert-expr for core spy verification"
+  (is (spy/called? spy-adder))
+  (is (spy/called-with? spy-adder 66 99)))
 
 ;; FAIL in () (form-init15061478131364358.clj:197)
 ;; assert gives us better error messages when our assertions don't hold true
