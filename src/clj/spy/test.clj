@@ -44,7 +44,7 @@
   [msg form]
   `(assert-called ~msg ~form ~identity ~spy/call-count))
 
-(defmacro assert-called-1
+(defmacro assert-called-once
   [msg form]
   `(assert-called ~msg ~form ~(fn [] 1) ~spy/call-count))
 
@@ -62,7 +62,7 @@
 
 (defmethod t/assert-expr 'spy/called-once?
   [msg form]
-  `(assert-called-1 ~msg ~form))
+  `(assert-called-once ~msg ~form))
 
 (defmethod t/assert-expr 'spy/called-with?
   [msg form]
@@ -82,11 +82,11 @@
 
 (defmethod t/assert-expr 'spy/called?
   [msg form]
-  `(assert-called-1 ~msg ~form))
+  `(assert-called-once ~msg ~form))
 
 (defmethod t/assert-expr 'spy/called-at-least-once?
   [msg form]
-  `(assert-called-1 ~msg ~form))
+  `(assert-called-once ~msg ~form))
 
 (defmethod t/assert-expr 'spy/called-no-more-than-n-times?
   [msg form]
@@ -94,4 +94,4 @@
 
 (defmethod t/assert-expr 'spy/called-no-more-than-once?
   [msg form]
-  `(assert-called-1 ~msg ~form))
+  `(assert-called-once ~msg ~form))
