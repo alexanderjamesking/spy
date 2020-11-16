@@ -15,21 +15,21 @@
   :deploy-repositories [["releases" :clojars]]
   :clean-targets ["target"]
   :cljsbuild {:builds [{:id "test-phantom"
-                        :source-paths ["src/cljs" "src/cljc" "src/cljs-macros" "test/cljs"]
+                        :source-paths ["src/cljs" "src/cljc" "src/cljs-macros" "test/cljs" "test/cljc/"]
                         :compiler {:output-to "target/test-phantom/test.js"
                                    :output-dir "target/test-phantom/out"
                                    :main 'spy.runner
                                    :optimizations :none
                                    :process-shim false}}
                        {:id "test-nashorn"
-                        :source-paths ["src/cljs" "src/cljc" "src/cljs-macros" "test/cljs"]
+                        :source-paths ["src/cljs" "src/cljc" "src/cljs-macros" "test/cljs" "test/cljc/"]
                         :compiler {:output-to "target/test-nashorn/test.js"
                                    :output-dir "target/test-nashorn/out"
                                    :main 'spy.runner
                                    :optimizations :simple
                                    :process-shim false}}
                        {:id "test-node"
-                        :source-paths ["src/cljs/" "src/cljc/" "src/cljs-macros/" "test/cljs/"]
+                        :source-paths ["src/cljs/" "src/cljc/" "src/cljs-macros/" "test/cljs/" "test/cljc/"]
                         :compiler {:target :nodejs
                                    :output-to "target/test-node/test.js"
                                    :output-dir "target/test-node/out"
