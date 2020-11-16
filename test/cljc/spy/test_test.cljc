@@ -1,5 +1,6 @@
 (ns spy.test-test
-  (:require [clojure.test :as t :refer [is deftest]]
+  (:require #?(:cljs [cljs.test :as t :refer [is deftest]]
+               :clj  [clojure.test :as t :refer [is deftest]])
             [spy.core :as spy]
             [spy.test]))
 
@@ -26,44 +27,25 @@
   [assert-fn expected actual]
   (check-simple :fail assert-fn expected actual))
 
-(defn errors
-  [assert-fn message]
-  (check :error
-         assert-fn
-         (fn [report]
-           (is (= message (-> report :actual .getMessage))))))
-
 (deftest called-n-times?-test
   (let [f (spy/spy)]
     (passes #(is (spy/called-n-times? f 0)) 0 0)
 
-    (fails #(is (spy/called-n-times? f 5)) 5 0))
-
-  (errors
-   #(is (spy/called-n-times?))
-   "Wrong number of args (0) passed to: core/called-n-times?"))
+    (fails #(is (spy/called-n-times? f 5)) 5 0)))
 
 (deftest not-called?-test
   (let [f (spy/spy)]
     (passes #(is (spy/not-called? f)) 0 0)
 
     (f)
-    (fails #(is (spy/not-called? f)) 0 1))
-
-  (errors
-   #(is (spy/not-called?))
-   "Wrong number of args (0) passed to: core/not-called?"))
+    (fails #(is (spy/not-called? f)) 0 1)))
 
 (deftest called-once?-test
   (let [f (spy/spy)]
     (fails #(is (spy/called-once? f)) 1 0)
 
     (f)
-    (passes #(is (spy/called-once? f)) 1 1))
-
-  (errors
-   #(is (spy/called-once?))
-   "Wrong number of args (0) passed to: core/called-once?"))
+    (passes #(is (spy/called-once? f)) 1 1)))
 
 (deftest called-with?-test
   (let [f (spy/spy)]
@@ -71,10 +53,7 @@
 
     (f "foo" "bar")
     (passes
-     #(is (spy/called-with? f "foo" "bar")) ["foo" "bar"] [["foo" "bar"]]))
-
-  (errors #(is (spy/called-with?))
-          "Wrong number of args (0) passed to: core/called-with?"))
+     #(is (spy/called-with? f "foo" "bar")) ["foo" "bar"] [["foo" "bar"]])))
 
 (deftest not-called-with?-test
   (let [f (spy/spy)]
@@ -83,10 +62,7 @@
     (f "foo" "bar")
     (fails #(is (spy/not-called-with? f "foo" "bar"))
            ["foo" "bar"]
-           [["foo" "bar"]]))
-
-  (errors #(is (spy/not-called-with?))
-          "Wrong number of args (0) passed to: core/not-called-with?"))
+           [["foo" "bar"]])))
 
 (deftest called-once-with?-test
   (let [f (spy/spy)]
@@ -99,10 +75,7 @@
     (f "foo" "bar")
     (fails #(is (spy/called-once-with? f "foo" "bar"))
            ["foo" "bar"]
-           [["foo" "bar"] ["foo" "bar"]]))
-
-  (errors #(is (spy/called-once-with?))
-          "Wrong number of args (0) passed to: core/called-once-with?"))
+           [["foo" "bar"] ["foo" "bar"]])))
 
 (deftest called-at-least-n-times?-test
   (let [f (spy/spy)]
@@ -112,11 +85,7 @@
     (fails #(is (spy/called-at-least-n-times? f 2)) 2 1)
 
     (f)
-    (passes #(is (spy/called-at-least-n-times? f 2)) 2 2))
-
-  (errors
-   #(is (spy/called-at-least-n-times?))
-   "Wrong number of args (0) passed to: core/called-at-least-n-times?"))
+    (passes #(is (spy/called-at-least-n-times? f 2)) 2 2)))
 
 (deftest called?-test
   (let [f (spy/spy)]
@@ -126,10 +95,7 @@
     (passes #(is (spy/called? f)) 1 1)
 
     (f)
-    (passes #(is (spy/called? f)) 1 2))
-
-  (errors #(is (spy/called?))
-          "Wrong number of args (0) passed to: core/called?"))
+    (passes #(is (spy/called? f)) 1 2)))
 
 (deftest called-at-least-once?-test
   (let [f (spy/spy)]
@@ -139,10 +105,7 @@
     (passes #(is (spy/called-at-least-once? f)) 1 1)
 
     (f)
-    (passes #(is (spy/called-at-least-once? f)) 1 2))
-
-  (errors #(is (spy/called-at-least-once?))
-          "Wrong number of args (0) passed to: core/called-at-least-once?"))
+    (passes #(is (spy/called-at-least-once? f)) 1 2)))
 
 (deftest called-no-more-than-n-times?-test
   (let [f (spy/spy)]
@@ -152,11 +115,7 @@
     (passes #(is (spy/called-no-more-than-n-times? f 1)) 1 1)
 
     (f)
-    (fails #(is (spy/called-no-more-than-n-times? f 1)) 1 2))
-
-  (errors
-   #(is (spy/called-no-more-than-n-times?))
-   "Wrong number of args (0) passed to: core/called-no-more-than-n-times?"))
+    (fails #(is (spy/called-no-more-than-n-times? f 1)) 1 2)))
 
 (deftest called-no-more-than-once?-test
   (let [f (spy/spy)]
@@ -166,8 +125,11 @@
     (passes #(is (spy/called-no-more-than-once? f)) 1 1)
 
     (f)
-    (fails #(is (spy/called-no-more-than-once? f)) 1 2))
+    (fails #(is (spy/called-no-more-than-once? f)) 1 2)))
 
-  (errors
-   #(is (spy/called-no-more-than-once?))
-   "Wrong number of args (0) passed to: core/called-no-more-than-once?"))
+(deftest error-test
+  (let [error (ex-info "Uh-oh!" {:some "data"})]
+    (check :error
+           #(is (spy/called-n-times? (throw error)))
+           (fn [report]
+             (is (= error (:actual report)))))))
