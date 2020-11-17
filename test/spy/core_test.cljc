@@ -186,3 +186,14 @@
       (is (= :one (f 1)))
       (is (spy/called-once? f))
       (is (= :something-else (f 42))))))
+
+(deftest spy-throws-exception
+  (testing "the spy catches and rethrows exceptions"
+    (let [ex (ex-info "Goodbye World!" {:goodbye "world"})
+          f  (spy/stub-throws ex)]
+      (is (thrown? #?(:cljs ExceptionInfo
+                      :clj  clojure.lang.ExceptionInfo) (f)))
+      (is (= 1 (count (spy/responses f))))
+      (let [thrown (:thrown (spy/first-response f))]
+        (is (= (ex-message ex) #?(:cljs (ex-message thrown)
+                                  :clj  (:cause thrown))))))))
