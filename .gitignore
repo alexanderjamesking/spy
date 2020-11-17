@@ -13,3 +13,5 @@ resources/public/cljs
 /out
 figwheel_server.log
 /.cljs_rhino_repl
+.shadow-cljs
+node_modules
