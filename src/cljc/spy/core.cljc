@@ -1,7 +1,9 @@
 (ns ^{:author "Alexander James King",
       :doc "A testing framework for stubs, spies and mocks.
       Enables verification of interactions with a function."}
-    spy.core)
+    spy.core
+  #?(:cljs (:require-macros [spy.test.cljs]))
+  (:require [spy.test]))
 
 (defn spy
   "If no function is supplied, returns a function that takes any number of args

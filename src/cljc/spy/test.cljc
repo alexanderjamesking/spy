@@ -16,47 +16,89 @@
   ;; expected: (\"baz\")
   ;;   actual: [(\"foo\" \"bar\")]
   (is (spy/called-with? f \"baz\"))"
-  #?(:cljs (:require-macros [spy.test.cljs])
-     :clj  (:require [clojure.test :as t])))
+  #?(:clj (:require [clojure.test :as t])))
 
-(defn called-n [n] n)
-(defn called-once [] 1)
-(defn called-args [& args] args)
-(defn not-called [] 0)
+(defn expected-called-n-times
+  [n]
+  n)
+
+(defn actual-called-n-times
+  [calls]
+  (count calls))
+
+(defn expected-called-once
+  []
+  1)
+
+(defn actual-called-once
+  [calls]
+  (actual-called-n-times calls))
+
+(defn expected-called-with-args
+  [& args]
+  args)
+
+(defn actual-called-with-args
+  [calls]
+  calls)
+
+(defn expected-not-called
+  []
+  0)
+
+(defn actual-not-called
+  [calls]
+  (actual-called-n-times calls))
 
 #?(:clj
    (do
      (defmacro assert-called
        [msg form report-fn expected-fn actual-fn]
-       (let [spy-fn (symbol (str "spy.core/" (name (first form))))
+       (let [spy-fn (symbol (str (name 'spy.core) "/" (name (first form))))
              args   (rest form)]
          `(let [args#   (list ~@args)
                 result# (apply ~spy-fn args#)]
             (~report-fn {:type     (if result# :pass :fail)
                          :message  ~msg
                          :expected (apply ~expected-fn (rest args#))
-                         :actual   (~actual-fn (first args#))})
+                         :actual   (~actual-fn (spy.core/calls (first args#)))})
             result#)))
 
-     (defmacro assert-called-n
+     (defmacro assert-called-n-times
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-n spy/call-count))
+       `(assert-called ~msg
+                        ~form
+                        ~report-fn
+                        ~`expected-called-n-times
+                        ~`actual-called-n-times))
 
      (defmacro assert-called-once
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-once spy/call-count))
+       `(assert-called ~msg
+                        ~form
+                        ~report-fn
+                        ~`expected-called-once
+                        ~`actual-called-once))
 
-     (defmacro assert-called-args
+     (defmacro assert-called-with-args
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn called-args spy/calls))
+       `(assert-called ~msg
+                        ~form
+                        ~report-fn
+                        ~`expected-called-with-args
+                        ~`actual-called-with-args))
 
      (defmacro assert-not-called
        [msg form report-fn]
-       `(assert-called ~msg ~form ~report-fn not-called spy/call-count))
+       `(assert-called ~msg
+                        ~form
+                        ~report-fn
+                        ~`expected-not-called
+                        ~`actual-not-called))
 
      (defmethod t/assert-expr 'spy/called-n-times?
        [msg form]
-       `(assert-called-n ~msg ~form t/do-report))
+       `(assert-called-n-times ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/not-called?
        [msg form]
@@ -68,19 +110,19 @@
 
      (defmethod t/assert-expr 'spy/called-with?
        [msg form]
-       `(assert-called-args ~msg ~form t/do-report))
+       `(assert-called-with-args ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/not-called-with?
        [msg form]
-       `(assert-called-args ~msg ~form t/do-report))
+       `(assert-called-with-args ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/called-once-with?
        [msg form]
-       `(assert-called-args ~msg ~form t/do-report))
+       `(assert-called-with-args ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/called-at-least-n-times?
        [msg form]
-       `(assert-called-n ~msg ~form t/do-report))
+       `(assert-called-n-times ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/called?
        [msg form]
@@ -92,7 +134,7 @@
 
      (defmethod t/assert-expr 'spy/called-no-more-than-n-times?
        [msg form]
-       `(assert-called-n ~msg ~form t/do-report))
+       `(assert-called-n-times ~msg ~form t/do-report))
 
      (defmethod t/assert-expr 'spy/called-no-more-than-once?
        [msg form]
