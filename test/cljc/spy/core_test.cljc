@@ -1,8 +1,6 @@
 (ns spy.core-test
-  (:require #?(:cljs
-               [cljs.test :as test :refer [report] :refer-macros [deftest testing is]])
-            #?(:clj
-               [clojure.test :refer [deftest testing is report]])
+  (:require #?(:cljs [cljs.test :as t :refer-macros [deftest testing is]])
+            #?(:clj  [clojure.test :as t :refer [deftest testing is]])
             [spy.core :as spy]
             [clojure.set :refer [subset?]]))
 
@@ -91,7 +89,7 @@
 
       (is (true? (spy/call-matching? f (fn [args]
                                          (subset? (set [42])
-                                                              (set args))))))
+                                                  (set args))))))
 
       (let [f2 (spy/spy)]
         (f2 {:command "hello"
@@ -181,8 +179,8 @@
 (deftest mock-test
   (testing "a mock is just a spy of a function with some behaviour"
     (let [f (spy/mock (fn [x] (if (= 1 x)
-                              :one
-                              :something-else)))]
+                                :one
+                                :something-else)))]
       (is (= :one (f 1)))
       (is (spy/called-once? f))
       (is (= :something-else (f 42))))))
@@ -197,3 +195,133 @@
       (let [thrown (:thrown (spy/first-response f))]
         (is (= (ex-message ex) #?(:cljs (ex-message thrown)
                                   :clj  (:cause thrown))))))))
+
+(defn check-expr
+  [status assert-fn check-expr-fn]
+  (let [reporter (spy/spy)]
+    (binding [t/report reporter]
+      (assert-fn))
+    (let [report (first (spy/first-call reporter))]
+      (is (= status (:type report)))
+      (check-expr-fn report))))
+
+(defn check-expr-simple
+  [status assert-fn expected actual]
+  (check-expr status assert-fn (fn [report]
+                                 (is (= expected (:expected report)))
+                                 (is (= actual (:actual report))))))
+
+(defn passes-expr
+  [assert-fn expected actual]
+  (check-expr-simple :pass assert-fn expected actual))
+
+(defn fails-expr
+  [assert-fn expected actual]
+  (check-expr-simple :fail assert-fn expected actual))
+
+(deftest called-n-times?-expr-test
+  (let [f (spy/spy)]
+    (passes-expr #(is (spy/called-n-times? f 0)) 0 0)
+
+    (fails-expr #(is (spy/called-n-times? f 5)) 5 0)))
+
+(deftest not-called?-expr-test
+  (let [f (spy/spy)]
+    (passes-expr #(is (spy/not-called? f)) 0 0)
+
+    (f)
+    (fails-expr #(is (spy/not-called? f)) 0 1)))
+
+(deftest called-once?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called-once? f)) 1 0)
+
+    (f)
+    (passes-expr #(is (spy/called-once? f)) 1 1)))
+
+(deftest called-with?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called-with? f "foo" "bar")) ["foo" "bar"] [])
+
+    (f "foo" "bar")
+    (passes-expr
+     #(is (spy/called-with? f "foo" "bar")) ["foo" "bar"] [["foo" "bar"]])))
+
+(deftest not-called-with?-expr-test
+  (let [f (spy/spy)]
+    (passes-expr #(is (spy/not-called-with? f "foo" "bar")) ["foo" "bar"] [])
+
+    (f "foo" "bar")
+    (fails-expr #(is (spy/not-called-with? f "foo" "bar"))
+                ["foo" "bar"]
+                [["foo" "bar"]])))
+
+(deftest called-once-with?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called-once-with? f "foo" "bar")) ["foo" "bar"] [])
+
+    (f "foo" "bar")
+    (passes-expr
+     #(is (spy/called-once-with? f "foo" "bar")) ["foo" "bar"] [["foo" "bar"]])
+
+    (f "foo" "bar")
+    (fails-expr #(is (spy/called-once-with? f "foo" "bar"))
+                ["foo" "bar"]
+                [["foo" "bar"] ["foo" "bar"]])))
+
+(deftest called-at-least-n-times?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called-at-least-n-times? f 2)) 2 0)
+
+    (f)
+    (fails-expr #(is (spy/called-at-least-n-times? f 2)) 2 1)
+
+    (f)
+    (passes-expr #(is (spy/called-at-least-n-times? f 2)) 2 2)))
+
+(deftest called?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called? f)) 1 0)
+
+    (f)
+    (passes-expr #(is (spy/called? f)) 1 1)
+
+    (f)
+    (passes-expr #(is (spy/called? f)) 1 2)))
+
+(deftest called-at-least-once?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/called-at-least-once? f)) 1 0)
+
+    (f)
+    (passes-expr #(is (spy/called-at-least-once? f)) 1 1)
+
+    (f)
+    (passes-expr #(is (spy/called-at-least-once? f)) 1 2)))
+
+(deftest called-no-more-than-n-times?-expr-test
+  (let [f (spy/spy)]
+    (passes-expr #(is (spy/called-no-more-than-n-times? f 1)) 1 0)
+
+    (f)
+    (passes-expr #(is (spy/called-no-more-than-n-times? f 1)) 1 1)
+
+    (f)
+    (fails-expr #(is (spy/called-no-more-than-n-times? f 1)) 1 2)))
+
+(deftest called-no-more-than-once?-expr-test
+  (let [f (spy/spy)]
+    (passes-expr #(is (spy/called-no-more-than-once? f)) 1 0)
+
+    (f)
+    (passes-expr #(is (spy/called-no-more-than-once? f)) 1 1)
+
+    (f)
+    (fails-expr #(is (spy/called-no-more-than-once? f)) 1 2)))
+
+(deftest error-expr-test
+  (let [error (ex-info "Uh-oh!" {:some "data"})]
+    (check-expr :error
+                #(is (spy/called-n-times? (throw error)))
+                (fn [report]
+                  (is (= error (:actual report)))))))
