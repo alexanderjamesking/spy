@@ -319,6 +319,22 @@
     (f)
     (fails-expr #(is (spy/called-no-more-than-once? f)) 1 2)))
 
+(deftest call-matching?-expr-test
+  (let [f (spy/spy)]
+    (fails-expr #(is (spy/call-matching? f (fn [call] (= call ["foo"]))))
+                '(fn [call] (= call ["foo"]))
+                [])
+
+    (f "foo")
+    (passes-expr #(is (spy/call-matching? f (fn [call] (= call ["foo"]))))
+                 '(fn [call] (= call ["foo"]))
+                 [["foo"]])
+
+    (f "bar")
+    (fails-expr #(is (spy/call-matching? f (fn [call] (= call ["baz"]))))
+                '(fn [call] (= call ["baz"]))
+                [["foo"] ["bar"]])))
+
 (deftest error-expr-test
   (let [error (ex-info "Uh-oh!" {:some "data"})]
     (check-expr :error

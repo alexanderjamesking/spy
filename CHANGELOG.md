@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0] - Unreleased
+- `assert-expr` implementation for `spy.core/call-matching?`.
+
+## [2.3.0] - 2020-11-17
+- Miscellaneous improvements and bugfixes in Clojure and ClojureScript `assert-expr` implementations.
+- Modernized ClojureScript build with `shadow-cljs`.
+
 ## [2.2.0] - 2020-11-16
 - Rich assertions for Clojure and ClojureScript, you can now require `spy.test` to register spy functions with `clojure.test/assert-expr` resulting in better error messages. This can be used instead of `spy.assert` which will likely be deprecated in the longer term in favour of `assert-expr`.
 
