@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "shadow-cljs": "~2.11.7"
+    "shadow-cljs": "2.14.0"
   },
   "scripts": {
     "test": "shadow-cljs compile test && node target/test.js"
