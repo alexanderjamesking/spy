@@ -15,5 +15,3 @@ jobs:
       run: lein deps
     - name: Run tests
       run: lein test
-    - name: Coverage
-      run: lein cloverage
