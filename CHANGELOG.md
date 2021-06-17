@@ -1,6 +1,9 @@
 # Changelog
 
-## [2.4.0] - Unreleased
+## [2.5.0] - 2021-06-11
+- Fixed a regression where `cljs` files were not included in the release jar.
+
+## [2.4.0] - 2020-11-18
 - `assert-expr` implementation for `spy.core/call-matching?`.
 
 ## [2.3.0] - 2020-11-17
