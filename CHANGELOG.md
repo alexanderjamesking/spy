@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.8.0] - 2021-06-21
+- Support mocking a single protocol via `protocol/mock`
+- Made `protocol/protocol-methods` private
+
 ## [2.5.0] - 2021-06-11
 - Fixed a regression where `cljs` files were not included in the release jar.
 

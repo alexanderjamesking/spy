@@ -196,7 +196,7 @@ If you are testing synchronous code then you can replace functions using [with-r
 
 ### Spying on Protocols (Experimental)
 
-Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. I'm open to suggestions on how to improve this and support ClojureScript, all contributions are welcome!
+Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. I'm open to suggestions on how to improve this and support ClojureScript, contributions are welcome.
 
 See `test/clj/spy/protocol_test.clj` for examples.
 
@@ -223,7 +223,7 @@ $ lein codox
 ```
 MIT License
 
-Copyright (c) 2020 Alexander James King
+Copyright (c) 2021 Alexander James King
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
