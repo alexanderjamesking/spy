@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [spy.core :as spy]
             [spy.protocol :as protocol]
+            [spy.assert :as assert]
             [spy.my-protocol :as my-protocol]))
 
 (defprotocol Greeter
@@ -40,6 +41,15 @@
     (is (= [[kwg-spy :ajk]] (spy/calls hey-spy)))
     (is (= [:hello-ajk] (spy/responses hey-spy)))))
 
+(deftest mock-test
+  (let [my-spy (protocol/mock Greeter
+                 (hey [this x]
+                   (str "Bonjour " x "!")))]
+    (is (= "Bonjour Pierre!" (hey my-spy "Pierre")))
+    (assert/called-once-with? (:hey (protocol/spies my-spy))
+                                  my-spy
+                                  "Pierre")))
+
 (deftest protocol-in-different-ns-test
   (let [target-instance (reify my-protocol/MyProtocolInADifferentNs
                           (hello-from-different-ns [this]
@@ -77,16 +87,17 @@
     (is (= :hello-a (hello spy-instance :a)))
     (is (= :hello-a-b-c (hello spy-instance :a :b :c)))))
 
+(def protocol-methods #'protocol/protocol-methods)
 (deftest protocol-methods-test
   (let [p @(resolve 'spy.protocol-test/Greeter)
-        methods (protocol/protocol-methods p)]
+        methods (protocol-methods p)]
     (is (= {:hey {:name 'hey
                   :arglists [['this 'x]]
                   :var #'spy.protocol-test/hey}}
            methods)))
 
   (let [p @(resolve 'spy.protocol-test/OverloadedMethods)
-        methods (protocol/protocol-methods p)]
+        methods (protocol-methods p)]
 
     (is (= {:hello
            {:name 'hello
@@ -95,7 +106,7 @@
            methods)))
 
   (let [p @(resolve 'spy.protocol-test/AllSorts)
-        methods (protocol/protocol-methods p)]
+        methods (protocol-methods p)]
     (is (= {:foo {:name 'foo
                   :arglists [['this 'a] ['this 'a 'b 'c]]
                   :var #'spy.protocol-test/foo}

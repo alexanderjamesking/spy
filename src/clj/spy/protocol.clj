@@ -1,7 +1,7 @@
 (ns spy.protocol
   (:require [spy.core :as spy]))
 
-(defn protocol-methods
+(defn- protocol-methods
   "Generate a list of methods that need to be implemented for
   the protocol signatures"
   [protocol]
@@ -62,3 +62,11 @@
 
 (defn spies [instance]
   (meta instance))
+
+(defmacro mock
+  "Wraps `clojure.core/reify` with a spy on the first protocol provided.
+  Spies on a single protocol only"
+  [& opts+specs]
+  (let [protocol (first opts+specs)]
+    `(spy ~protocol
+          (clojure.core/reify ~@opts+specs))))
