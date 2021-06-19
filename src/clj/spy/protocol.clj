@@ -29,16 +29,17 @@
           (let [[_ to-process] (first signatures)]
             (recur (rest signatures) to-process mthds)))))))
 
-(defn ->spy-fns [methods instance]
+(defn- ->args [arglist]
+  (vec (map (fn [_] (gensym)) arglist)))
+
+(defn- ->spy-fns [methods instance]
   (reduce (fn [acc method]
             (assoc acc (keyword (:name method))
                    `(spy.core/spy
                      (fn
                        ~@(map (fn [arglist]
-                                (list arglist
-                                      (concat (list (:var method)
-                                                    instance)
-                                              (rest arglist))))
+                                (let [args (->args arglist)]
+                                  (list args (concat (list (:var method) instance) (rest args)))))
                               (:arglists method))))))
           {}
           methods))
@@ -53,11 +54,8 @@
          (reify ~protocol
            ~@(mapcat (fn [{:keys [name arglists]}]
                        (map (fn [arglist]
-                              (list name
-                                    arglist
-                                    (concat (list (list (keyword name)
-                                                        spy-fns-sym))
-                                            arglist)))
+                              (let [args (->args arglist)]
+                                (list name args (concat (list (list (keyword name) spy-fns-sym)) args))))
                             arglists))
                methods))
          ~spy-fns-sym))))
