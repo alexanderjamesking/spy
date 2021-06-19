@@ -5,7 +5,7 @@
             :url "https://opensource.org/licenses/MIT"
             :year 2018
             :key "mit"}
-  :plugins [[lein-codox "0.10.3"]
+  :plugins [[lein-codox "0.10.7"]
             [lein-cloverage "1.2.2"]]
   :managed-dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/clojurescript "1.10.866"]]
