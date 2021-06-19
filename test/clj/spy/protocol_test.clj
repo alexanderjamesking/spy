@@ -106,3 +106,34 @@
                   :arglists [['this 'one 'two]]
                   :var #'spy.protocol-test/baz}}
            methods))))
+
+
+(defprotocol DestructuringArgs
+  (destructuring-within-definition [this {:keys [my destructured args] :as my-args}]))
+
+(deftest destructuring-within-definition-test
+  (let [to-spy-on (reify DestructuringArgs
+                    (destructuring-within-definition [_ {:keys [my destructured args] :as some-args}]
+                      [[my destructured args]
+                       some-args]))
+        spied-upon (protocol/spy DestructuringArgs to-spy-on)
+        args-map {:my "my"
+                  :destructured {:a 1 :b 2}
+                  :args [4 5 6]}
+        expected [["my" {:a 1 :b 2} [4 5 6]]
+                  args-map]]
+
+    (is (= expected (destructuring-within-definition to-spy-on args-map)))
+    (is (= expected (destructuring-within-definition spied-upon args-map)))))
+
+(deftest destructuring-within-definition-not-in-implementation-test
+  (let [to-spy-on (reify DestructuringArgs
+                    (destructuring-within-definition [_ some-args]
+                      some-args))
+        spied-upon (protocol/spy DestructuringArgs to-spy-on)
+        args-map {:my "my"
+                  :destructured {:a 1 :b 2}
+                  :args [4 5 6]}]
+
+    (is (= args-map (destructuring-within-definition to-spy-on args-map)))
+    (is (= args-map (destructuring-within-definition spied-upon args-map)))))
