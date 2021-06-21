@@ -46,6 +46,7 @@
 
 (defmacro spy
   "Reify the protocol, spies attached to the reified object via metadata"
+  {:style/indent [:defn [1]]}
   [protocol instance]
   (let [methods (vals (protocol-methods @(resolve protocol)))
         spy-fns-sym (gensym "spy-fns-")]
@@ -66,6 +67,7 @@
 (defmacro mock
   "Wraps `clojure.core/reify` with a spy on the first protocol provided.
   Spies on a single protocol only"
+  {:style/indent [:defn [1]]}
   [& opts+specs]
   (let [protocol (first opts+specs)]
     `(spy ~protocol
