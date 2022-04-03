@@ -148,3 +148,29 @@
 
     (is (= args-map (destructuring-within-definition to-spy-on args-map)))
     (is (= args-map (destructuring-within-definition spied-upon args-map)))))
+
+(defprotocol ProtocolA
+  (method-a [this x])
+  (a-not-mocked [this y z]))
+
+(defprotocol ProtocolB
+  (method-b [this x]))
+
+(deftest multi-protocols-test
+  (let [mock (protocol/mock
+              ProtocolA
+              (method-a [this x]
+                        :a)
+
+              ProtocolB
+              (method-b [this x]
+                        :b))]
+    (is (= :a (method-a mock :testing)))
+    (is (= :b (method-b mock :test)))
+    (is (spy/called-once-with? (:method-a (protocol/spies mock))
+                               mock
+                               :testing))
+
+    (is (spy/called-once-with? (:method-b (protocol/spies mock))
+                               mock
+                               :test))))
