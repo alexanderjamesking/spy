@@ -65,10 +65,30 @@
   (meta instance))
 
 (defmacro mock
-  "Wraps `clojure.core/reify` with a spy on the first protocol provided.
-  Spies on a single protocol only"
-  {:style/indent [:defn [1]]}
+  "Creates an implementation via `clojure.core/reify` and
+  a wrapper to spy on the implementation, forwards all calls
+  to the implementation and records calsl in spies. Matches the
+  signature and can be used directly instead of `clojure.core/reify`"
   [& opts+specs]
-  (let [protocol (first opts+specs)]
-    `(spy ~protocol
-          (clojure.core/reify ~@opts+specs))))
+  (let [[opts specs] (#'clojure.core/parse-opts opts+specs)
+        impls (#'clojure.core/parse-impls specs)
+        protocols (map (comp :on deref resolve) (keys impls))
+        methods (apply concat (map (comp vals
+                                         protocol-methods
+                                         deref
+                                         resolve)
+                                   (keys impls)))
+        spy-fns-sym (gensym "spy-fns-")
+        instance (gensym "instance-")]
+    `(let [~instance (clojure.core/reify ~@opts+specs)
+           ~spy-fns-sym ~(->spy-fns methods instance)]
+       (with-meta
+         (reify
+           ~@protocols
+           ~@(mapcat (fn [{:keys [name arglists]}]
+                       (map (fn [arglist]
+                              (let [args (->args arglist)]
+                                (list name args (concat (list (list (keyword name) spy-fns-sym)) args))))
+                            arglists))
+               methods))
+         ~spy-fns-sym))))
