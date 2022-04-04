@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.11.0] - 2022-04-04
+- Support mocking multiple protocols via `protocol/mock`
+
 ## [2.8.0] - 2021-06-21
 - Support mocking a single protocol via `protocol/mock`
 - Made `protocol/protocol-methods` private
