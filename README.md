@@ -194,11 +194,55 @@ If you are testing synchronous code then you can replace functions using [with-r
       (is (spy/not-called? send-message)))))
 ```
 
-### Spying on Protocols (Experimental)
+### Protocols (Experimental)
 
 Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. I'm open to suggestions on how to improve this and support ClojureScript, contributions are welcome.
 
-See `test/clj/spy/protocol_test.clj` for examples.
+`spy.protocol/mock` uses the same signature as `reify` and can be used
+to mock multiple protocols.
+
+``` clojure
+(require '[spy.protocol :as protocol])
+
+(defprotocol Rockable
+  (rock [this x] "rock this!"))
+
+(defprotocol Tuneable
+  (tune [this x y]))
+
+(def my-mock
+  (protocol/mock
+    Rockable
+    (rock [_ x]
+      (str "Rock: " x "!"))
+
+    Tuneable
+    (tune [_ x y]
+      (str "Tune: " x ", " y "!"))))
+
+;; `protocol/spies` returns a map of the spy functions on the mock
+(protocol/spies my-mock)
+;; {:rock #function[clojure.lang.AFunction/1],
+;;  :tune #function[clojure.lang.AFunction/1]}
+
+;; use the core functions from the spy ns on the protocol spy
+(spy/call-count (:rock (protocol/spies my-mock)))
+;; 0
+
+;; call the rock method
+(rock my-mock "Living easy, lovin' free")
+
+;; extract the spy from the mock and verify
+(spy/called-with? (:rock (protocol/spies my-mock))
+                  my-mock
+                  "Living easy, lovin' free")
+;; true
+```
+
+You will also find a `spy` macro within the protocol namespace, this
+currently supports spying on an implementation for a single protocol.
+Caution: the protocol `spy` macro will change in the future when I add support for spying on multiple protocols, you can see examples in the 
+`spy.protocol-test` namespace.
 
 ## Contributing
 
