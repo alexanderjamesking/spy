@@ -7,10 +7,8 @@
             :key "mit"}
   :plugins [[lein-codox "0.10.7"]
             [lein-cloverage "1.2.2"]]
-  :managed-dependencies [[org.clojure/clojure "1.10.3"]
-                 [org.clojure/clojurescript "1.10.866"]]
-  :dependencies [[org.clojure/clojure]
-                 [org.clojure/clojurescript]]
+  :profiles {:provided {:dependencies [[org.clojure/clojure "1.10.3"]
+                                       [org.clojure/clojurescript "1.10.866"]]}}
   :source-paths ["src/clj" "src/cljc" "src/cljs"]
   :test-paths ["test/clj" "test/cljc"]
   :deploy-repositories [["releases" :clojars]]
