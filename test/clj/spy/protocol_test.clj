@@ -158,13 +158,13 @@
 
 (deftest multi-protocols-test
   (let [mock (protocol/mock
-              ProtocolA
-              (method-a [this x]
-                        :a)
+               ProtocolA
+               (method-a [this x]
+                 :a)
 
-              ProtocolB
-              (method-b [this x]
-                        :b))]
+               ProtocolB
+               (method-b [this x]
+                 :b))]
     (is (= :a (method-a mock :testing)))
     (is (= :b (method-b mock :test)))
     (is (spy/called-once-with? (:method-a (protocol/spies mock))
