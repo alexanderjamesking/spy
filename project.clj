@@ -3,7 +3,7 @@
   :url "https://github.com/alexanderjamesking/spy"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"
-            :year 2018
+            :year 2022
             :key "mit"}
   :plugins [[lein-codox "0.10.7"]
             [lein-cloverage "1.2.2"]]

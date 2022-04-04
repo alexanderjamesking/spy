@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.12.0] - 2022-04-04
+- Change Clojure and ClojureScript dependencies to be provided.
+
 ## [2.11.0] - 2022-04-04
 - Support mocking multiple protocols via `protocol/mock`
 
