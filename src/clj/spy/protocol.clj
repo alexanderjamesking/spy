@@ -69,8 +69,9 @@
   a wrapper to spy on the implementation, forwards all calls
   to the implementation and records calsl in spies. Matches the
   signature and can be used directly instead of `clojure.core/reify`"
+  {:style/indent [:defn [1]]}
   [& opts+specs]
-  (let [[opts specs] (#'clojure.core/parse-opts opts+specs)
+  (let [[_ specs] (#'clojure.core/parse-opts opts+specs)
         impls (#'clojure.core/parse-impls specs)
         protocols (map (comp :on deref resolve) (keys impls))
         methods (apply concat (map (comp vals
@@ -80,7 +81,7 @@
                                    (keys impls)))
         spy-fns-sym (gensym "spy-fns-")
         instance (gensym "instance-")]
-    `(let [~instance (clojure.core/reify ~@opts+specs)
+    `(let [~instance (reify ~@opts+specs)
            ~spy-fns-sym ~(->spy-fns methods instance)]
        (with-meta
          (reify
