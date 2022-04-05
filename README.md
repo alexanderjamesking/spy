@@ -258,11 +258,6 @@ Code coverage:
 $ lein cloverage
 ```
 
-Docs:
-```
-$ lein codox
-```
-
 ## License
 ```
 MIT License
