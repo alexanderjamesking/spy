@@ -190,7 +190,7 @@
     (let [ex (ex-info "Goodbye World!" {:goodbye "world"})
           f  (spy/stub-throws ex)]
       (is (thrown? #?(:cljs ExceptionInfo
-                      :clj  clojure.lang.ExceptionInfo) (f)))
+                      :clj  clojure.lang.ExceptionInfo) (f "foo" "bar")))
       (is (= 1 (count (spy/responses f))))
       (let [thrown (:thrown (spy/first-response f))]
         (is (= (ex-message ex) #?(:cljs (ex-message thrown)

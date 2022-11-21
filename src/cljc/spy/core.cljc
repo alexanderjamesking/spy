@@ -58,7 +58,7 @@
 (defn stub-throws
   "Returns a spy function that throws the exception provided."
   [exception]
-  (spy (fn [] (throw exception))))
+  (spy (fn [& _] (throw exception))))
 
 (defn calls
   "Returns a list of all calls to the spy f."
