@@ -155,7 +155,7 @@ If you spy on a function that throws an exception then Spy will catch your excep
 
 ### Using with-redefs to replace functions with spies
 
-If you are testing synchronous code then you can replace functions using [with-redefs](https://clojuredocs.org/clojure.core/with-redefs), if you're testing async code then it's safer to pass the functions in using dependency injection. If you want to see more examples of this checkout this excellent blog post about [TDD in Clojure](https://engineering.fundingcircle.com/blog/2016/01/11/tdd-in-clojure/).
+If you are testing synchronous code then you can replace functions using [with-redefs](https://clojuredocs.org/clojure.core/with-redefs), if you're testing async code then it's safer to pass the functions in using dependency injection, I don't recommend using ~with-redefs~.
 
 ```clojure
 (ns spy-example.core-test
@@ -194,9 +194,9 @@ If you are testing synchronous code then you can replace functions using [with-r
       (is (spy/not-called? send-message)))))
 ```
 
-### Protocols (Experimental)
+### Protocols
 
-Currently only Clojure is supported, I intend to make this work for ClojureScript too but it's a little trickier. I'm open to suggestions on how to improve this and support ClojureScript, contributions are welcome.
+Currently, only Clojure is supported. I'm open to suggestions on how to support ClojureScript, contributions are welcome.
 
 `spy.protocol/mock` uses the same signature as `reify` and can be used
 to mock multiple protocols.
