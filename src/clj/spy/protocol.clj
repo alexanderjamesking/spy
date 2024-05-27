@@ -45,20 +45,33 @@
           methods))
 
 (defmacro spy
-  "Reify the protocol, spies attached to the reified object via metadata"
+  "Reify the protocols, spies attached to the reified object via metadata.
+  Can accept multiple protocols at once: (spy.protocol/spy Proto1...ProtoN impl)"
   {:style/indent [:defn [1]]}
-  [protocol instance]
-  (let [methods (vals (protocol-methods @(resolve protocol)))
+  [& args]
+  (let [protocols (butlast args)
+        instance  (last args)
+        proto-methods (reduce (fn [acc protocol]
+                                (assoc acc protocol (vals (protocol-methods @(resolve protocol)))))
+                              {}
+                              protocols)
+        all-methods (->> proto-methods vals (apply concat))
         spy-fns-sym (gensym "spy-fns-")]
-    `(let [~spy-fns-sym ~(->spy-fns methods instance)]
+
+    `(let [~spy-fns-sym ~(->spy-fns all-methods instance)]
        (with-meta
-         (reify ~protocol
-           ~@(mapcat (fn [{:keys [name arglists]}]
-                       (map (fn [arglist]
-                              (let [args (->args arglist)]
-                                (list name args (concat (list (list (keyword name) spy-fns-sym)) args))))
-                            arglists))
-               methods))
+         ~@(let [protos+impls
+                  (for [[protocol methods] proto-methods]
+                     (concat
+                       (list (symbol protocol))
+                       (mapcat (fn [{:keys [name arglists]}]
+                                 (map (fn [arglist]
+                                        (let [args (->args arglist)]
+                                          (list name args (concat (list (list (keyword name) spy-fns-sym)) args))))
+                                      arglists))
+                               methods)))]
+             (list (concat '(reify)
+                           (apply concat protos+impls))))
          ~spy-fns-sym))))
 
 (defn spies [instance]
