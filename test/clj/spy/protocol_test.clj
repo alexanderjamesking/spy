@@ -100,9 +100,9 @@
         methods (protocol-methods p)]
 
     (is (= {:hello
-           {:name 'hello
-            :arglists [['this 'a] ['this 'a 'b 'c]]
-            :var #'spy.protocol-test/hello}}
+            {:name 'hello
+             :arglists [['this 'a] ['this 'a 'b 'c]]
+             :var #'spy.protocol-test/hello}}
            methods)))
 
   (let [p @(resolve 'spy.protocol-test/AllSorts)
@@ -157,20 +157,40 @@
   (method-b [this x]))
 
 (deftest multi-protocols-test
-  (let [mock (protocol/mock
-               ProtocolA
-               (method-a [this x]
-                 :a)
+  (testing "mock"
+    (let [mock (protocol/mock
+                 ProtocolA
+                 (method-a [this x]
+                   :a)
 
-               ProtocolB
-               (method-b [this x]
-                 :b))]
-    (is (= :a (method-a mock :testing)))
-    (is (= :b (method-b mock :test)))
-    (is (spy/called-once-with? (:method-a (protocol/spies mock))
-                               mock
-                               :testing))
+                 ProtocolB
+                 (method-b [this x]
+                   :b))]
+      (is (= :a (method-a mock :testing)))
+      (is (= :b (method-b mock :test)))
+      (is (spy/called-once-with? (:method-a (protocol/spies mock))
+                                 mock
+                                 :testing))
 
-    (is (spy/called-once-with? (:method-b (protocol/spies mock))
-                               mock
-                               :test))))
+      (is (spy/called-once-with? (:method-b (protocol/spies mock))
+                                 mock
+                                 :test))))
+  (testing "spy"
+    (let [impl (reify
+                 ProtocolA
+                 (method-a [this x ] :a)
+                 ProtocolB
+                 (method-b [this x] :b))
+          spied (protocol/spy ProtocolA ProtocolB impl)]
+
+      (is (= :a (method-a spied :testing)))
+      (is (= :b (method-b spied :test)))
+
+      (is (spy/called-once-with? (:method-a (protocol/spies spied))
+                                 spied
+                                 :testing))
+
+      (is (spy/called-once-with? (:method-b (protocol/spies spied))
+                                 spied
+                                 :test)))))
+

@@ -240,9 +240,7 @@ to mock multiple protocols.
 ```
 
 You will also find a `spy` macro within the protocol namespace, this
-currently supports spying on an implementation for a single protocol.
-Caution: the protocol `spy` macro will change in the future when I add support for spying on multiple protocols, you can see examples in the 
-`spy.protocol-test` namespace.
+can also be used to spy on multiple protocols: `(spy.protocol/spy Proto1...ProtoN impl)`
 
 ## Contributing
 
