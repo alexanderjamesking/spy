@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.15.0] - 2024-05-28
+- Allow spying on multiple protocols https://github.com/alexanderjamesking/spy/pull/34
+  
 ## [2.12.0] - 2022-04-04
 - Change Clojure and ClojureScript dependencies to be provided.
 
