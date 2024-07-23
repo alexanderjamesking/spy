@@ -80,7 +80,7 @@
 (defmacro mock
   "Creates an implementation via `clojure.core/reify` and
   a wrapper to spy on the implementation, forwards all calls
-  to the implementation and records calsl in spies. Matches the
+  to the implementation and records calls in spies. Matches the
   signature and can be used directly instead of `clojure.core/reify`"
   {:style/indent [:defn [1]]}
   [& opts+specs]
