@@ -132,6 +132,24 @@ To implement a mock you just need to implement a function that has the same cont
       (is (= :something-else (f 42))))
 ```
 
+### Custom Call Matching
+
+The `call-matching?` function allows you to write custom predicates to verify that your spy was called with arguments that match specific conditions.
+
+```clojure
+(let [f (spy/spy (fn [x y] (+ x y)))]
+  (f 42 88)
+  ;; Check if any call had 42 as the first argument
+  (is (spy/call-matching? f (fn [call-args]
+                              (= 42 (first call-args)))))
+
+  ;; You can also match against maps
+  (let [f2 (spy/spy)]
+    (f2 {:command "hello" :value 42})
+    (is (spy/call-matching? f2 (fn [args]
+                                 (= "hello" (:command (first args))))))))
+```
+
 ### Exceptions
 
 If you spy on a function that throws an exception then Spy will catch your exception, record it in the responses, then re-throw the original exception, thus enabling you to test that the exception was thrown. A ```stub-throws``` helper function is provided.
