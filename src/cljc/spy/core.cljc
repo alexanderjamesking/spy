@@ -19,7 +19,8 @@
   ([] (spy (constantly nil)))
   ([f] (let [calls (atom [])
              responses (atom [])
-             record-call! (fn [args] (swap! calls conj args))
+             record-call! (fn [args]
+                            (swap! calls conj args))
              record-response! (fn [response] (swap! responses conj response))
              record-exception! (fn [e]
                                  (swap! responses
