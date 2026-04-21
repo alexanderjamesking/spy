@@ -3,17 +3,39 @@ name: Clojure CI
 on:
   push:
     branches: [ master ]
+    tags: [ '[0-9]*' ]
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+    - uses: DeLaGuardo/setup-clojure@13
+      with:
+        cli: latest
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+          .cpcache
+        key: ${{ runner.os }}-deps-${{ hashFiles('deps.edn') }}
+        restore-keys: ${{ runner.os }}-deps-
     - name: Install dependencies
-      run: lein deps
+      run: clojure -P -M:test
     - name: Run tests
-      run: lein test
-    - name: Coverage
-      run: lein coverage
+      run: clojure -M:test -m cognitect.test-runner
+    - name: Deploy to Clojars
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+        CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+        RELEASE_VERSION: ${{ github.ref_name }}
+      run: clojure -T:build deploy-jar

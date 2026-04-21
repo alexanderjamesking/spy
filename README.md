@@ -6,11 +6,23 @@
 
 Spy - a Clojure and ClojureScript library for stubs, spies and mocks. This library is aimed at users of [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
 
-It records calls and responses to and from a function, allowing you to verify interactions. Terms used in this library are as follows, there are many different names for Mocks, see [Test Doubles, Fakes, Mocks and Stubs](https://blog.pragmatists.com/test-doubles-fakes-mocks-and-stubs-1a7491dfa3da) for more detail.
+It records calls and responses to and from a function, allowing you to verify interactions.
 
 1. Stub - function that returns a hardcoded value
 2. Spy - wrapper around a function allowing verification of interactions with the function
-3. Mock  - function with a fake implementation to be used in place of the real thing
+3. Mock - function with a fake implementation to be used in place of the real thing
+
+## Installation
+
+**deps.edn**
+```clojure
+{:deps {tortue/spy {:mvn/version "2.15.0"}}}
+```
+
+**Leiningen (project.clj)**
+```clojure
+[tortue/spy "2.15.0"]
+```
 
 ## Usage
 
@@ -262,23 +274,13 @@ can also be used to spy on multiple protocols: `(spy.protocol/spy Proto1...Proto
 
 ## Contributing
 
-Pull requests are welcome. Please run the test suite and check that all tests pass prior to submission.
-
-Tests:
-```
-$ lein test
-```
-
-Code coverage:
-```
-$ lein cloverage
-```
+Pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 ```
 MIT License
 
-Copyright (c) 2025 Alexander James King
+Copyright (c) 2026 Alexander James King
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

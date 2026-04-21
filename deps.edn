@@ -1,0 +1,11 @@
+{:paths ["src/clj" "src/cljc" "src/cljs" "resources"]
+ :deps  {}
+ :aliases
+ {:provided {:extra-deps {org.clojure/clojure      {:mvn/version "1.12.1"}
+                          org.clojure/clojurescript {:mvn/version "1.12.42"}}}
+  :test {:extra-paths ["test/clj" "test/cljc"]
+         :extra-deps  {org.clojure/clojure                        {:mvn/version "1.12.1"}
+                       io.github.cognitect-labs/test-runner        {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}
+  :build {:deps     {io.github.clojure/tools.build {:mvn/version "0.10.5"}
+                    slipset/deps-deploy           {:mvn/version "0.2.2"}}
+          :ns-default build}}}

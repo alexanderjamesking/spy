@@ -1,0 +1,11 @@
+{:lint-as {spy.assert/called?                      clojure.core/assert
+           spy.assert/not-called?                   clojure.core/assert
+           spy.assert/called-once?                  clojure.core/assert
+           spy.assert/called-n-times?               clojure.core/assert
+           spy.assert/called-with?                  clojure.core/assert
+           spy.assert/not-called-with?              clojure.core/assert
+           spy.assert/called-once-with?             clojure.core/assert
+           spy.assert/called-at-least-once?         clojure.core/assert
+           spy.assert/called-at-least-n-times?      clojure.core/assert
+           spy.assert/called-no-more-than-once?     clojure.core/assert
+           spy.assert/called-no-more-than-n-times?  clojure.core/assert}}
